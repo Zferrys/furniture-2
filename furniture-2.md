@@ -1,3 +1,37 @@
+# 项目概述 (更新于 2026-06-07)
+
+## 最近更新 Changelog
+
+### 2026-06-07 功能增强 & Bug 修复
+
+**新增功能：**
+- **商品详情页**：首页点击商品图片/名称跳转到独立详情页 (`customer?action=detail&id=X`) → `furn_detail.jsp`
+- **订单管理分页**：后台订单列表支持分页（首页/上一页/数字翻页/下一页/末页），每页 4 条
+- **顾客端分页**：首页家居列表支持分页导航（首页/上一页/页码/下一页/末页）
+- **搜索分页**：按名称模糊搜索也支持分页
+
+**分页全链路改造：**
+- `Page.java` 从 `List<Furn>` 泛型化为 `List<T>`，支持 Furn 和 Order 复用
+- `OrderDao/Impl`：新增 4 个分页查询方法 (LIMIT/OFFSET + COUNT)
+- `OrderService/Impl`：新增 2 个分页服务方法
+- `customerServlet`：新增 `detail()` 方法处理商品详情请求
+
+**Bug 修复：**
+- 修复 `Basic_Servlet` 无 action 参数时的 NPE（默认走 page 方法）
+- 修复前台分页 404：`customerServlet.page()` 缺少 `page.setUrl("customer?")`
+- 修复 `login.jsp` 无导航栏；修复首页/404页死链
+- 修复 `furn_update.jsp`/`furn_add.jsp` 导航全是 `href="#"` 死链
+- 修复 6 个页面导航栏不一致问题（搜索框、购物车图标、后台管理入口）
+- 修复所有 `shop-left-sidebar.html` 死链（4处）→ 分别指向详情页或首页
+- 修复订单分页"共X页(X条)"文字换行问题
+
+**代码清理：**
+- 删除 `furnManageServlet.show()` 无分页死代码方法
+
+**涉及文件：** 30 个文件，+1091/-302 行
+
+---
+
 <details>
 <summary>Relevant source files</summary>
 

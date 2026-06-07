@@ -15,8 +15,8 @@ public class orderServiceTest {
     @Test
     public void testSaveOrder() {
         Cart cart = new Cart();
-        cart.addItem(new CartItem(18,"元神之家",new BigDecimal(600),1,new BigDecimal(600)));
-        cart.addItem(new CartItem(17,"hhh",new BigDecimal(60),2,new BigDecimal(120)));
+        cart.addItem(new CartItem(18,"元神之家",new BigDecimal(600),1,new BigDecimal(600),"assets/images/product-image/default.jpg"));
+        cart.addItem(new CartItem(17,"hhh",new BigDecimal(60),2,new BigDecimal(120),"assets/images/product-image/default.jpg"));
         String orderId = orderService.saveOrder(cart, 2);
         System.out.println(orderId);
     }

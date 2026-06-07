@@ -125,9 +125,61 @@
                 </div>
                 <!-- Header Logo End -->
 
+                <!-- Header Action Start -->
+                <div class="col align-self-center">
+                    <div class="header-actions">
+                        <div class="header_account_list">
+                            <a href="javascript:void(0)" class="header-action-btn search-btn"><i
+                                    class="icon-magnifier"></i></a>
+                            <div class="dropdown_search">
+                                <form class="action-form" action="customer" method="post">
+                                    <input type="hidden" name="action" value="searchByName">
+                                    <input class="form-control" placeholder="请输入查找的关键字" type="text"
+                                           name="name">
+                                    <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Single Wedge Start -->
+                        <div class="header-bottom-set dropdown">
+                            <c:if test="${empty sessionScope.member && empty sessionScope.admin}">
+                                <a href="views/member/login.jsp">登录|注册</a>
+                            </c:if>
+                            <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
+                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                            </c:if>
+                        </div>
+                        <div class="header-bottom-set dropdown">
+                            <a href="customer?pageNo=1">首页</a>
+                        </div>
+                        <c:if test="${not empty sessionScope.admin}">
+                            <div class="header-bottom-set dropdown">
+                                <a href="views/manage/manage_menu.jsp">后台管理</a>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.member }">
+                            <div class="header-bottom-set dropdown">
+                                <a href="member?action=logout">安全退出</a>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.admin }">
+                            <div class="header-bottom-set dropdown">
+                                <a href="manage/admin?action=logout">安全退出</a>
+                            </div>
+                        </c:if>
+                        <!-- Single Wedge End -->
+                        <a href="views/cart/cart.jsp"
+                           class="header-action-btn header-action-btn-cart pr-0">
+                            <i class="icon-handbag"> 购物车</i>
+                            <span class="header-action-num">${sessionScope.cart.totalCount}</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Header Action End -->
             </div>
         </div>
     </div>
+    <!-- Header Bottom  End -->
     <!-- Header Bottom  Start 手机端的header -->
     <div class="header-bottom d-lg-none sticky-nav bg-white">
         <div class="container position-relative">

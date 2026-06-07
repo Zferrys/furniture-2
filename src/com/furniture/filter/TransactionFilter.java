@@ -20,6 +20,9 @@ public class TransactionFilter implements Filter {
         } catch (IOException | ServletException e) {
             JDBCUtilsByDruid.rollback();
             throw new RuntimeException(e);
+        } finally {
+            // 确保请求结束后清理ThreadLocal连接
+            JDBCUtilsByDruid.clearConnection();
         }
     }
 

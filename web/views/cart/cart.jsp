@@ -79,42 +79,52 @@
                 <!-- Header Action Start -->
                 <div class="col align-self-center">
                     <div class="header-actions">
+                        <div class="header_account_list">
+                            <a href="javascript:void(0)" class="header-action-btn search-btn"><i
+                                    class="icon-magnifier"></i></a>
+                            <div class="dropdown_search">
+                                <form class="action-form" action="customer" method="post">
+                                    <input type="hidden" name="action" value="searchByName">
+                                    <input class="form-control" placeholder="请输入查找的关键字" type="text"
+                                           name="name">
+                                    <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+                                </form>
+                            </div>
+                        </div>
                         <div class="header-bottom-set dropdown">
                             <c:if test="${empty sessionScope.member && empty sessionScope.admin }">
-                                <a href="views/member/login.jsp">请先登录进行购物</a>
+                                <a>请先登录</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
                                 <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
+                            <a href="customer">首页</a>
+                        </div>
+                        <div class="header-bottom-set dropdown">
                             <a href="orderServlet?action=orderManager">订单管理</a>
                         </div>
-                        <!-- Single Wedge Start -->
+                        <c:if test="${not empty sessionScope.admin}">
+                            <div class="header-bottom-set dropdown">
+                                <a href="views/manage/manage_menu.jsp">后台管理</a>
+                            </div>
+                        </c:if>
                         <c:if test="${not empty sessionScope.member }">
                             <div class="header-bottom-set dropdown">
-
                                 <a href="member?action=logout">安全退出</a>
-
                             </div>
                         </c:if>
                         <c:if test="${not empty sessionScope.admin }">
                             <div class="header-bottom-set dropdown">
-
                                 <a href="manage/admin?action=logout">安全退出</a>
-
                             </div>
                         </c:if>
-                        <%--<!-- Single Wedge End -->--%>
-                        <%--<a href="#offcanvas-cart"--%>
-                        <%--   class="header-action-btn header-action-btn-cart offcanvas-toggle pr-0">--%>
-                        <%--    <i class="icon-handbag"> 购物车</i>--%>
-                        <%--    <span class="header-action-num">88</span>--%>
-                        <%--</a>--%>
-                        <%--<a href="#offcanvas-mobile-menu"--%>
-                        <%--   class="header-action-btn header-action-btn-menu offcanvas-toggle d-lg-none">--%>
-                        <%--    <i class="icon-menu"></i>--%>
-                        <%--</a>--%>
+                        <a href="views/cart/cart.jsp"
+                           class="header-action-btn header-action-btn-cart pr-0">
+                            <i class="icon-handbag"> 购物车</i>
+                            <span class="header-action-num">${sessionScope.cart.totalCount}</span>
+                        </a>
                     </div>
                 </div>
                 <!-- Header Action End -->
@@ -181,11 +191,11 @@
                                     <tr>
                                         <td class="product-thumbnail">
                                             <a href="#"><img class="img-responsive ml-3"
-                                                             src="assets/images/product-image/1.jpg"
+                                                             src="${entry.value.imgPath}"
                                                              alt=""/></a>
                                         </td>
                                         <td class="product-name"><a href="#">${entry.value.name}</a></td>
-                                        <td class="product-price-cart"><span class="amount">$${entry.value.price}</span>
+                                        <td class="product-price-cart"><span class="amount">¥${entry.value.price}</span>
                                         </td>
                                         <td class="product-quantity">
                                             <div class="cart-plus-minus">
@@ -194,7 +204,7 @@
                                                        value="${entry.value.count}"/>
                                             </div>
                                         </td>
-                                        <td class="product-subtotal">$${entry.value.totalPrice}</td>
+                                        <td class="product-subtotal">¥${entry.value.totalPrice}</td>
                                         <td class="product-remove">
                                             <a href="javascript:void(0);" furnId="${entry.value.id}"><i class="icon-close"></i></a>
                                         </td>

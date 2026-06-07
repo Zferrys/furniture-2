@@ -12,8 +12,8 @@ public class cartTest {
     @Test
 
     public void addItem() {
-        cart.addItem(new CartItem(18,"元神之家",new BigDecimal(60),1,new BigDecimal(60)));
-        cart.addItem(new CartItem(17,"元神之家",new BigDecimal(60),1,new BigDecimal(60)));
+        cart.addItem(new CartItem(18,"元神之家",new BigDecimal(60),1,new BigDecimal(60),"assets/images/product-image/default.jpg"));
+        cart.addItem(new CartItem(17,"元神之家",new BigDecimal(60),1,new BigDecimal(60),"assets/images/product-image/default.jpg"));
         System.out.println(cart);
     }
 }

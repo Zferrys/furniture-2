@@ -93,12 +93,48 @@
                             <h4>登录成功, 返回首页</h4>
                         </a>
                     </div>
+                    <div class="tab-content">
+                        <div id="lg1" class="tab-pane active">
+                            <div class="login-form-container">
+                                <div class="login-register-form" style="text-align: center;">
+                                    <div style="padding: 30px;">
+                                        <i class="icon-check" style="font-size: 60px; color: #28a745; margin-bottom: 20px;"></i>
+                                        <h3 style="margin-bottom: 15px; color: #28a745;">欢迎回来，${sessionScope.member.username}！</h3>
+                                        <p style="margin-bottom: 25px; color: #666;">
+                                            您已成功登录，请选择以下操作：
+                                        </p>
+                                        <div>
+                                            <a href="customer" style="display: inline-block; padding: 12px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 10px;">
+                                                <i class="icon-handbag"></i> 浏览商品
+                                            </a>
+                                            <a href="orderServlet?action=orderManager" style="display: inline-block; padding: 12px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin: 10px;">
+                                                <i class="icon-list"></i> 我的订单
+                                            </a>
+                                            <a href="views/cart/cart.jsp" style="display: inline-block; padding: 12px 30px; background: #ffc107; color: #333; text-decoration: none; border-radius: 5px; margin: 10px;">
+                                                <i class="icon-hand-o-right"></i> 购物车
+                                            </a>
+                                        </div>
+                                        <p style="margin-top: 20px; color: #999; font-size: 14px;">
+                                            3秒后自动返回首页...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <!-- login area end -->
+
+<script type="text/javascript">
+    // 3秒后自动跳转到首页
+    setTimeout(function() {
+        window.location.href = "customer";
+    }, 3000);
+</script>
 
 <!-- Footer Area Start -->
 <div class="footer-area">

@@ -70,10 +70,13 @@
 
                         <!-- Single Wedge Start -->
                         <div class="header-bottom-set dropdown">
-                            <a href="#">家居管理</a>
+                            <a href="<%=request.getContextPath()%>/manage/furnManage?action=page&pageNo=${param.pageNo}">家居管理</a>
                         </div>
                         <div class="header-bottom-set dropdown">
-                            <a href="#">订单管理</a>
+                            <a href="<%=request.getContextPath()%>/orderServlet?action=orderManager">订单管理</a>
+                        </div>
+                        <div class="header-bottom-set dropdown">
+                            <a href="<%=request.getContextPath()%>/views/manage/manage_menu.jsp">后台首页</a>
                         </div>
                     </div>
                 </div>
@@ -130,14 +133,14 @@
                                         <input type="file" name="imgPath" id="" value="${requestScope.furn.imgPath}" onchange="prev(this)"/>
                                     </div>
                                 </td>
-                                <td class="product-name"><input name="name" style="width: 60%" type="text" value=${requestScope.furn.name}></td>
-                                <td class="product-name"><input name="market" style="width: 90%" type="text" value=${requestScope.furn.market}></td>
-                                <td class="product-price-cart"><input name="price" style="width: 90%" type="text" value=${requestScope.furn.price}></td>
+                                <td class="product-name"><input name="name" style="width: 60%" type="text" value="${requestScope.furn.name}"></td>
+                                <td class="product-name"><input name="market" style="width: 90%" type="text" value="${requestScope.furn.market}"></td>
+                                <td class="product-price-cart"><input name="price" style="width: 90%" type="text" value="${requestScope.furn.price}"></td>
                                 <td class="product-quantity">
-                                    <input name="sales" style="width: 90%" type="text" value=${requestScope.furn.sales}>
+                                    <input name="sales" style="width: 90%" type="number" value="${requestScope.furn.sales}" min="0">
                                 </td>
                                 <td class="product-quantity">
-                                    <input name="store" style="width: 90%" type="text" value=${requestScope.furn.store}>
+                                    <input name="store" style="width: 90%" type="number" value="${requestScope.furn.store}" min="0">
                                 </td>
                                 <td>
 <!--                                    <a href="#"><i class="icon-pencil"></i></a>-->

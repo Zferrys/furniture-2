@@ -36,7 +36,7 @@
                             <a href="<%=request.getContextPath()+"/manage/furnManage?action=page&pageNo=1"%>">家居管理</a>
                         </div>
                         <div class="header-bottom-set dropdown">
-                            <a href="#">订单管理</a>
+                            <a href="orderServlet?action=orderManager">订单管理</a>
                         </div>
                     </div>
                 </div>
@@ -66,87 +66,77 @@
 <!-- Cart Area Start -->
 <div class="cart-main-area pt-100px pb-100px">
     <div class="container">
-        <h3 class="cart-page-title">家居后台管理-菜单</h3>
+        <h3 class="cart-page-title" style="margin-bottom: 30px;">家居后台管理控制台</h3>
+        
+        <!-- Admin Info -->
+        <div class="row" style="margin-bottom: 30px;">
+            <div class="col-lg-12">
+                <div class="alert alert-info" style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 5px; padding: 15px;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong><i class="icon-user"></i> 欢迎管理员：</strong>${sessionScope.admin.name}
+                        </div>
+                        <div class="col-md-6" style="text-align: right;">
+                            <a href="manage/admin?action=logout" style="color: #721c24; text-decoration: none; font-weight: bold;">
+                                <i class="icon-off"></i> 退出登录
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-
+            <!-- 家居管理 -->
+            <div class="col-lg-4 col-md-6 mb-30px">
+                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 30px; text-align: center; height: 100%;">
+                    <div class="card-body">
+                        <i class="icon-handbag" style="font-size: 50px; color: #007bff; margin-bottom: 15px;"></i>
+                        <h4 style="margin-bottom: 15px;">家居管理</h4>
+                        <p style="margin-bottom: 20px; color: #666;">添加、修改、删除家居商品</p>
+                        <a href="<%=request.getContextPath()%>/manage/furnManage?action=page&pageNo=1" 
+                           class="btn btn-primary" style="text-decoration: none;">
+                            进入管理
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 订单管理 -->
+            <div class="col-lg-4 col-md-6 mb-30px">
+                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 30px; text-align: center; height: 100%;">
+                    <div class="card-body">
+                        <i class="icon-list" style="font-size: 50px; color: #28a745; margin-bottom: 15px;"></i>
+                        <h4 style="margin-bottom: 15px;">订单管理</h4>
+                        <p style="margin-bottom: 20px; color: #666;">查看所有订单，处理发货</p>
+                        <a href="<%=request.getContextPath()%>/orderServlet?action=orderManager" 
+                           class="btn btn-success" style="text-decoration: none;">
+                            进入管理
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 返回首页 -->
+            <div class="col-lg-4 col-md-6 mb-30px">
+                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 30px; text-align: center; height: 100%;">
+                    <div class="card-body">
+                        <i class="icon-home" style="font-size: 50px; color: #ffc107; margin-bottom: 15px;"></i>
+                        <h4 style="margin-bottom: 15px;">返回首页</h4>
+                        <p style="margin-bottom: 20px; color: #666;">返回前台商城页面</p>
+                        <a href="<%=request.getContextPath()%>/customer" 
+                           class="btn btn-warning" style="text-decoration: none;">
+                            返回首页
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <!-- Cart Area End -->
 
-<!-- Footer Area Start -->
-<div class="footer-area">
-    <div class="footer-container">
-        <div class="footer-top">
-            <div class="container">
-                <div class="row">
-                    <!-- Start single blog -->
-                    <!-- End single blog -->
-                    <!-- Start single blog -->
-                    <div class="col-md-6 col-sm-6 col-lg-3 mb-md-30px mb-lm-30px" data-aos="fade-up"
-                         data-aos-delay="400">
-                        <div class="single-wedge">
-                            <h4 class="footer-herading">信息</h4>
-                            <div class="footer-links">
-                                <div class="footer-row">
-                                    <ul class="align-items-center">
-                                        <li class="li"><a class="single-link" href="about.html">关于我们</a></li>
-                                        <li class="li"><a class="single-link" href="#">交货信息</a></li>
-                                        <li class="li"><a class="single-link" href="privacy-policy.html">隐私与政策</a></li>
-                                        <li class="li"><a class="single-link" href="#">条款和条件</a></li>
-                                        <li class="li"><a class="single-link" href="#">制造</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End single blog -->
-                    <!-- Start single blog -->
-                    <div class="col-md-6 col-lg-2 col-sm-6 mb-lm-30px" data-aos="fade-up" data-aos-delay="600">
-                        <div class="single-wedge">
-                            <h4 class="footer-herading">我的账号</h4>
-                            <div class="footer-links">
-                                <div class="footer-row">
-                                    <ul class="align-items-center">
-                                        <li class="li"><a class="single-link" href="my-account.html">我的账号</a>
-                                        </li>
-                                        <li class="li"><a class="single-link" href="cart.html">我的购物车</a></li>
-                                        <li class="li"><a class="single-link" href="login.html">登录</a></li>
-                                        <li class="li"><a class="single-link" href="wishlist.html">感兴趣的</a></li>
-                                        <li class="li"><a class="single-link" href="checkout.html">结账</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End single blog -->
-                    <!-- Start single blog -->
-                    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="800">
-
-                    </div>
-                    <!-- End single blog -->
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="row flex-sm-row-reverse">
-                    <div class="col-md-6 text-right">
-                        <div class="payment-link">
-                            <img src="#" alt="">
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-left">
-                        <p class="copy-text">Copyright &copy; 2021 ~</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Footer Area End -->
+<!-- Add fmt taglib for date formatting -->
 <script src="assets/js/vendor/vendor.min.js"></script>
 <script src="assets/js/plugins/plugins.min.js"></script>
 <!-- Main Js -->

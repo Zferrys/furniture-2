@@ -12,6 +12,15 @@
     <link rel="stylesheet" href="assets/css/plugins/plugins.min.css"/>
     <link rel="stylesheet" href="assets/css/style.min.css">
     <script type="text/javascript" src="script/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        function updateStatus(orderId, status) {
+            var statusText = status == 1 ? '发货' : '完成';
+            if (!confirm('确定要标记订单【' + orderId + '】为' + statusText + '状态吗？')) {
+                return;
+            }
+            location.href = 'orderServlet?action=updateOrderStatus&orderId=' + orderId + '&status=' + status;
+        }
+    </script>
 </head>
 
 <body>
@@ -32,15 +41,52 @@
                 <!-- Header Action Start -->
                 <div class="col align-self-center">
                     <div class="header-actions">
+                        <div class="header_account_list">
+                            <a href="javascript:void(0)" class="header-action-btn search-btn"><i
+                                    class="icon-magnifier"></i></a>
+                            <div class="dropdown_search">
+                                <form class="action-form" action="customer" method="post">
+                                    <input type="hidden" name="action" value="searchByName">
+                                    <input class="form-control" placeholder="请输入查找的关键字" type="text"
+                                           name="name">
+                                    <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+                                </form>
+                            </div>
+                        </div>
                         <div class="header-bottom-set dropdown">
-                            <a>欢迎: ${sessionScope.member.username}</a>
+                            <c:if test="${empty sessionScope.member && empty sessionScope.admin }">
+                                <a>请先登录</a>
+                            </c:if>
+                            <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
+                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                            </c:if>
+                        </div>
+                        <div class="header-bottom-set dropdown">
+                            <a href="customer">首页</a>
                         </div>
                         <div class="header-bottom-set dropdown">
                             <a href="orderServlet?action=orderManager">订单管理</a>
                         </div>
-                        <div class="header-bottom-set dropdown">
-                            <a href="member?action=logout">安全退出</a>
-                        </div>
+                        <c:if test="${not empty sessionScope.admin}">
+                            <div class="header-bottom-set dropdown">
+                                <a href="views/manage/manage_menu.jsp">后台管理</a>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.member }">
+                            <div class="header-bottom-set dropdown">
+                                <a href="member?action=logout">安全退出</a>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.admin }">
+                            <div class="header-bottom-set dropdown">
+                                <a href="manage/admin?action=logout">安全退出</a>
+                            </div>
+                        </c:if>
+                        <a href="views/cart/cart.jsp"
+                           class="header-action-btn header-action-btn-cart pr-0">
+                            <i class="icon-handbag"> 购物车</i>
+                            <span class="header-action-num">${sessionScope.cart.totalCount}</span>
+                        </a>
                     </div>
                 </div>
                 <!-- Header Action End -->
@@ -120,27 +166,53 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${requestScope.orders}" var="order">
-                                <tr>
-                                    <td class="product-name">${order.id}</td>
-                                    <td class="product-name">${order.createTime}</td>
-                                    <td class="product-price-cart"><span class="amount">${order.price}</span></td>
-                                    <td class="product-name">
-                                        <a href="#">
-                                            <c:choose>
-                                                <c:when test="${order.status==0}">未发货</c:when>
-                                                <c:when test="${order.status==1}">已发货</c:when>
-                                                <c:when test="${order.status==2}">已结账</c:when>
-                                                <c:otherwise>异常状态</c:otherwise>
-                                            </c:choose>
-                                        </a>
-                                    </td>
-                                    <td class="product-remove">
-                                        <a href="orderServlet?action=orderItemDetail&orderId=${order.id}"><i
-                                                class="icon-eye"></i></a>
-                                    </td>
-                                </tr>
-                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${not empty requestScope.page.items}">
+                                    <c:forEach items="${requestScope.page.items}" var="order">
+                                        <tr>
+                                            <td class="product-name">${order.id}</td>
+                                            <td class="product-name">${order.createTime}</td>
+                                            <td class="product-price-cart"><span class="amount">¥${order.price}</span></td>
+                                            <td class="product-name">
+                                                <c:choose>
+                                                    <c:when test="${order.status==0}"><span style="color: orange;">未发货</span></c:when>
+                                                    <c:when test="${order.status==1}"><span style="color: blue;">已发货</span></c:when>
+                                                    <c:when test="${order.status==2}"><span style="color: green;">已结账</span></c:when>
+                                                    <c:otherwise><span style="color: red;">异常状态</span></c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td class="product-remove">
+                                                <a href="orderServlet?action=orderItemDetail&orderId=${order.id}" title="查看详情"><i
+                                                        class="icon-eye"></i> 详情</a>
+                                            </td>
+                                            <c:if test="${not empty sessionScope.admin}">
+                                                <td class="product-remove">
+                                                    <c:if test="${order.status == 0}">
+                                                        <a href="javascript:void(0);" onclick="updateStatus('${order.id}', 1)" title="标记发货">
+                                                            <i class="icon-truck"></i> 发货
+                                                        </a>
+                                                    </c:if>
+                                                    <c:if test="${order.status == 1}">
+                                                        <a href="javascript:void(0);" onclick="updateStatus('${order.id}', 2)" title="标记完成">
+                                                            <i class="icon-check"></i> 完成
+                                                        </a>
+                                                    </c:if>
+                                                    <c:if test="${order.status == 2}">
+                                                        <span style="color: gray;">已完成</span>
+                                                    </c:if>
+                                                </td>
+                                            </c:if>
+                                        </tr>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr>
+                                        <td colspan="${not empty sessionScope.admin ? 6 : 5}" style="text-align: center; padding: 40px;">
+                                            暂无订单记录
+                                        </td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
 
                             </tbody>
                         </table>
@@ -148,6 +220,53 @@
                 </form>
             </div>
         </div>
+        <!--  Pagination Area Start -->
+        <c:if test="${not empty requestScope.page.items}">
+        <div class="pro-pagination-style text-center mb-md-30px mb-lm-30px mt-6" data-aos="fade-up">
+            <ul>
+                <li><a href="${requestScope.page.url}pageNo=1">首页</a></li>
+                <c:choose>
+                    <c:when test="${requestScope.page.pageTotalCount<=5}">
+                        <c:set var="begin" value="1"/>
+                        <c:set var="end" value="${requestScope.page.pageTotalCount}"/>
+                    </c:when>
+                    <c:when test="${requestScope.page.pageTotalCount>5}">
+                        <c:choose>
+                            <c:when test="${requestScope.page.pageNo<=3}">
+                                <c:set var="begin" value="1"/>
+                                <c:set var="end" value="5"/>
+                            </c:when>
+                            <c:when test="${requestScope.page.pageNo>requestScope.page.pageTotalCount-3}">
+                                <c:set var="begin" value="${requestScope.page.pageTotalCount-4}"/>
+                                <c:set var="end" value="${requestScope.page.pageTotalCount}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="begin" value="${requestScope.page.pageNo-2}"/>
+                                <c:set var="end" value="${requestScope.page.pageNo+2}"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:when>
+                </c:choose>
+                <c:if test="${requestScope.page.pageNo > 1}">
+                    <li><a href="${requestScope.page.url}pageNo=${requestScope.page.pageNo-1}">上一页</a></li>
+                </c:if>
+                <c:forEach begin="${begin}" end="${end}" var="i">
+                    <c:if test="${i == requestScope.page.pageNo}">
+                        <li><a href="${requestScope.page.url}pageNo=${i}" class="active">${i}</a></li>
+                    </c:if>
+                    <c:if test="${i != requestScope.page.pageNo}">
+                        <li><a href="${requestScope.page.url}pageNo=${i}">${i}</a></li>
+                    </c:if>
+                </c:forEach>
+                <c:if test="${requestScope.page.pageNo < requestScope.page.pageTotalCount}">
+                    <li><a href="${requestScope.page.url}pageNo=${requestScope.page.pageNo+1}">下一页</a></li>
+                </c:if>
+                <li><a href="${requestScope.page.url}pageNo=${requestScope.page.pageTotalCount}">末页</a></li>
+                <li><a style="white-space: nowrap;">共${requestScope.page.pageTotalCount}页(${requestScope.page.totalRow}条)</a></li>
+            </ul>
+        </div>
+        </c:if>
+        <!--  Pagination Area End -->
     </div>
 </div>
 <!-- Cart Area End -->

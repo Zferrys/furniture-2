@@ -53,7 +53,10 @@
                         </div>
                         <!-- Single Wedge Start -->
                         <div class="header-bottom-set dropdown">
-                            <a href="#">后台管理</a>
+                            <a href="views/manage/manage_menu.jsp">后台管理首页</a>
+                        </div>
+                        <div class="header-bottom-set dropdown">
+                            <a href="orderServlet?action=orderManager">订单管理</a>
                         </div>
                         <div class="header-bottom-set dropdown">
                             <a href="views/manage/furn_add.jsp?pageNo=${requestScope.page.pageNo}">添加家居</a>
@@ -104,15 +107,24 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <c:choose>
+                                <c:when test="${empty requestScope.page.items}">
+                                    <tr>
+                                        <td colspan="7" style="text-align:center; padding:40px; color:#999;">
+                                            暂无家居数据，请 <a href="views/manage/furn_add.jsp?pageNo=${requestScope.page.pageNo}">添加家居</a>
+                                        </td>
+                                    </tr>
+                                </c:when>
+                                <c:otherwise>
                             <c:forEach items="${requestScope.page.items}" var="furn">
                                 <tr>
                                     <td class="product-thumbnail">
-                                        <a href="#"><img class="img-responsive ml-3" src=${furn.imgPath}
+                                        <a href="#"><img class="img-responsive ml-3" src="${furn.imgPath}"
                                                 alt=""/></a>
                                     </td>
                                     <td class="product-name"><a href="#">${furn.name}</a></td>
                                     <td class="product-name"><a href="#">${furn.market}</a></td>
-                                    <td class="product-price-cart"><span class="amount">${furn.price}</span></td>
+                                    <td class="product-price-cart"><span class="amount">¥${furn.price}</span></td>
                                     <td class="product-quantity">
                                             ${furn.sales}
                                     </td>
@@ -120,13 +132,17 @@
                                             ${furn.store}
                                     </td>
                                     <td class="product-remove">
-                                        <a href="manage/furnManage?action=queryFurnById&id=${furn.id}&pageNo=${requestScope.page.pageNo}"><i
-                                                class="icon-pencil"></i></a>
-                                        <a href="manage/furnManage?action=close&id=${furn.id}" class="close"><i
-                                                class="icon-close"></i></a>
+                                        <a href="manage/furnManage?action=queryFurnById&id=${furn.id}&pageNo=${requestScope.page.pageNo}" title="编辑">
+                                            <i class="icon-pencil"></i> 编辑
+                                        </a>
+                                        <a href="manage/furnManage?action=close&id=${furn.id}&pageNo=${requestScope.page.pageNo}" class="close" title="下架">
+                                            <i class="icon-close"></i> 下架
+                                        </a>
                                     </td>
                                 </tr>
                             </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
                             </tbody>
                         </table>
                     </div>

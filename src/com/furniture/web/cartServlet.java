@@ -28,7 +28,7 @@ public class cartServlet extends Basic_Servlet {
             return;
         }
 
-        CartItem cartItem = new CartItem(furn.getId(), furn.getName(), furn.getPrice(), 1, furn.getPrice());
+        CartItem cartItem = new CartItem(furn.getId(), furn.getName(), furn.getPrice(), 1, furn.getPrice(), furn.getImgPath());
         Cart cart = (Cart) req.getSession().getAttribute("cart");
         if (null == cart) {
             cart = new Cart();
@@ -48,7 +48,7 @@ public class cartServlet extends Basic_Servlet {
             return;
         }
 
-        CartItem cartItem = new CartItem(furn.getId(), furn.getName(), furn.getPrice(), 1, furn.getPrice());
+        CartItem cartItem = new CartItem(furn.getId(), furn.getName(), furn.getPrice(), 1, furn.getPrice(), furn.getImgPath());
         Cart cart = (Cart) req.getSession().getAttribute("cart");
         if (null == cart) {
             cart = new Cart();

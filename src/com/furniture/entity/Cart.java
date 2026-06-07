@@ -34,7 +34,10 @@ public class Cart {
         totalPrice = BigDecimal.ZERO; // 重置总价
         Set<Integer> keys = items.keySet();
         for (Integer id : keys) {
-            totalPrice = totalPrice.add(((CartItem) items.get(id)).getTotalPrice());
+            CartItem cartItem = items.get(id);
+            if (null != cartItem) {
+                totalPrice = totalPrice.add(cartItem.getTotalPrice());
+            }
         }
         return totalPrice;
     }
@@ -54,7 +57,10 @@ public class Cart {
         totalCount = 0;
         Set<Integer> keys = items.keySet();
         for (Integer id : keys) {
-            totalCount += ((CartItem) items.get(id)).getCount();
+            CartItem cartItem = items.get(id);
+            if (null != cartItem) {
+                totalCount += cartItem.getCount();
+            }
         }
         return totalCount;
     }

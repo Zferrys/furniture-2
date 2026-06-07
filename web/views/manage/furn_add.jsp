@@ -10,6 +10,34 @@
     <link rel="stylesheet" href="assets/css/vendor/vendor.min.css"/>
     <link rel="stylesheet" href="assets/css/plugins/plugins.min.css"/>
     <link rel="stylesheet" href="assets/css/style.min.css">
+    <style type="text/css">
+        #pic {
+            position: relative;
+        }
+        form {
+            position: relative;
+            height: 200px;
+        }
+        input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 200px;
+            opacity: 0;
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+        function prev(event) {
+            var img = document.getElementById("prevView");
+            var file = event.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                img.setAttribute("src", this.result);
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -34,10 +62,13 @@
 
                         <!-- Single Wedge Start -->
                         <div class="header-bottom-set dropdown">
-                            <a href="#">家居管理</a>
+                            <a href="<%=request.getContextPath()%>/manage/furnManage?action=page&pageNo=${param.pageNo}">家居管理</a>
                         </div>
                         <div class="header-bottom-set dropdown">
-                            <a href="#">订单管理</a>
+                            <a href="<%=request.getContextPath()%>/orderServlet?action=orderManager">订单管理</a>
+                        </div>
+                        <div class="header-bottom-set dropdown">
+                            <a href="<%=request.getContextPath()%>/views/manage/manage_menu.jsp">后台首页</a>
                         </div>
                     </div>
                 </div>
@@ -70,10 +101,7 @@
         <h3 class="cart-page-title">家居后台管理-添加家居</h3>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-                <form action="manage/furnManage" method="post">
-                    <input type="hidden" name="action" value="add">
-                    <input type="hidden" name="pageNo" value="${param.pageNo}">
-                    <input type="hidden" name="imgPath" value="assets/images/product-image/default.jpg">
+                <form action="manage/furnManage?action=add&pageNo=${param.pageNo}" method="post" enctype="multipart/form-data">
                     <div class="table-content table-responsive cart-table-content">
                         <table>
                             <thead>
@@ -90,22 +118,24 @@
                             <tbody>
                             <tr>
                                 <td class="product-thumbnail">
-                                    <a href="#"><img class="img-responsive ml-3" src="assets/images/product-image/default.jpg"
-                                                     alt=""/></a>
+                                    <div id="pic">
+                                        <img id="prevView" class="img-responsive ml-3"
+                                             src="assets/images/product-image/default.jpg"
+                                             alt=""/>
+                                        <input type="file" name="imgPath" onchange="prev(this)"/>
+                                    </div>
                                 </td>
-                                <td class="product-name"><input name="name" style="width: 60%" type="text" value="Name"/></td>
-                                <td class="product-name"><input name="market" style="width: 90%" type="text" value="蚂蚁家居"/></td>
-                                <td class="product-price-cart"><input name="price" style="width: 90%" type="text" value="60.00"/></td>
+                                <td class="product-name"><input name="name" style="width: 60%" type="text" placeholder="请输入家居名称" required/></td>
+                                <td class="product-name"><input name="market" style="width: 90%" type="text" placeholder="请输入制造商" required/></td>
+                                <td class="product-price-cart"><input name="price" style="width: 90%" type="text" placeholder="0.00" required/></td>
                                 <td class="product-quantity">
-                                    <input name="sales" style="width: 90%" type="text" value="100"/>
+                                    <input name="sales" style="width: 90%" type="number" value="0" min="0"/>
                                 </td>
                                 <td class="product-quantity">
-                                    <input name="store" style="width: 90%" type="text" value="80"/>
+                                    <input name="store" style="width: 90%" type="number" value="0" min="0"/>
                                 </td>
                                 <td>
-<!--                                    <a href="#"><i class="icon-pencil"></i></a>-->
-<!--                                    <a href="#"><i class="icon-close"></i></a>-->
-                                    <input type="submit" style="width: 90%;background-color: silver;border: silver;border-radius: 20%;" value="添加家居"/>
+                                    <input type="submit" style="width: 90%;background-color: silver;border: silver;border-radius: 20%;cursor:pointer;" value="添加家居"/>
                                 </td>
                             </tr>
                             </tbody>

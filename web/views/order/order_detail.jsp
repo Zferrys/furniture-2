@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -32,42 +33,52 @@
                 <!-- Header Action Start -->
                 <div class="col align-self-center">
                     <div class="header-actions">
+                        <div class="header_account_list">
+                            <a href="javascript:void(0)" class="header-action-btn search-btn"><i
+                                    class="icon-magnifier"></i></a>
+                            <div class="dropdown_search">
+                                <form class="action-form" action="customer" method="post">
+                                    <input type="hidden" name="action" value="searchByName">
+                                    <input class="form-control" placeholder="请输入查找的关键字" type="text"
+                                           name="name">
+                                    <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+                                </form>
+                            </div>
+                        </div>
                         <div class="header-bottom-set dropdown">
                             <c:if test="${empty sessionScope.member && empty sessionScope.admin }">
-                                <a href="views/member/login.jsp">请先登录进行购物</a>
+                                <a>请先登录</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
                                 <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
+                            <a href="customer">首页</a>
+                        </div>
+                        <div class="header-bottom-set dropdown">
                             <a href="orderServlet?action=orderManager">订单管理</a>
                         </div>
-                        <!-- Single Wedge Start -->
+                        <c:if test="${not empty sessionScope.admin}">
+                            <div class="header-bottom-set dropdown">
+                                <a href="views/manage/manage_menu.jsp">后台管理</a>
+                            </div>
+                        </c:if>
                         <c:if test="${not empty sessionScope.member }">
                             <div class="header-bottom-set dropdown">
-
                                 <a href="member?action=logout">安全退出</a>
-
                             </div>
                         </c:if>
                         <c:if test="${not empty sessionScope.admin }">
                             <div class="header-bottom-set dropdown">
-
                                 <a href="manage/admin?action=logout">安全退出</a>
-
                             </div>
                         </c:if>
-                        <%--<!-- Single Wedge End -->--%>
-                        <%--<a href="#offcanvas-cart"--%>
-                        <%--   class="header-action-btn header-action-btn-cart offcanvas-toggle pr-0">--%>
-                        <%--    <i class="icon-handbag"> 购物车</i>--%>
-                        <%--    <span class="header-action-num">88</span>--%>
-                        <%--</a>--%>
-                        <%--<a href="#offcanvas-mobile-menu"--%>
-                        <%--   class="header-action-btn header-action-btn-menu offcanvas-toggle d-lg-none">--%>
-                        <%--    <i class="icon-menu"></i>--%>
-                        <%--</a>--%>
+                        <a href="views/cart/cart.jsp"
+                           class="header-action-btn header-action-btn-cart pr-0">
+                            <i class="icon-handbag"> 购物车</i>
+                            <span class="header-action-num">${sessionScope.cart.totalCount}</span>
+                        </a>
                     </div>
                 </div>
                 <!-- Header Action End -->
@@ -112,7 +123,38 @@
 <!-- Cart Area Start -->
 <div class="cart-main-area pt-100px pb-100px">
     <div class="container">
-        <h3 class="cart-page-title">订单-16248893425621</h3>
+        <!-- Order Info Header -->
+        <h3 class="cart-page-title" style="margin-bottom: 20px;">订单详情</h3>
+        
+        <c:if test="${not empty requestScope.order}">
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-lg-12">
+                <div class="alert alert-info" style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 5px; padding: 15px;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>订单编号：</strong>${requestScope.order.id}
+                        </div>
+                        <div class="col-md-3">
+                            <strong>下单时间：</strong><fmt:formatDate value="${requestScope.order.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>订单状态：</strong>
+                            <c:choose>
+                                <c:when test="${requestScope.order.status==0}"><span style="color: orange;">未发货</span></c:when>
+                                <c:when test="${requestScope.order.status==1}"><span style="color: blue;">已发货</span></c:when>
+                                <c:when test="${requestScope.order.status==2}"><span style="color: green;">已结账</span></c:when>
+                                <c:otherwise><span style="color: red;">异常状态</span></c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>订单总价：</strong><span style="color: red; font-size: 18px;">¥${requestScope.totalPrice}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </c:if>
+        
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 <form action="#">
@@ -120,35 +162,54 @@
                         <table>
                             <thead>
                             <tr>
-
-                                <th>家居名</th>
+                                <th>商品名称</th>
                                 <th>单价</th>
                                 <th>数量</th>
                                 <th>金额</th>
-
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="orderItem" items="${requestScope.orderItems}">
-
-                            <tr>
-                                <td class="product-name"><a href="#">${orderItem.name}</a></td>
-                                <td class="product-price-cart"><span class="amount">$${orderItem.price}</span></td>
-                                <td class="product-quantity">${orderItem.count}</td>
-                                <td class="product-subtotal">$${orderItem.totalPrice}</td>
-                            </tr>
-
-                            </c:forEach>
+                            <c:if test="${not empty requestScope.orderItems}">
+                                <c:forEach var="orderItem" items="${requestScope.orderItems}">
+                                <tr>
+                                    <td class="product-name"><a href="#">${orderItem.name}</a></td>
+                                    <td class="product-price-cart"><span class="amount">¥${orderItem.price}</span></td>
+                                    <td class="product-quantity">${orderItem.count} 件</td>
+                                    <td class="product-subtotal"><span class="amount">¥${orderItem.totalPrice}</span></td>
+                                </tr>
+                                </c:forEach>
+                            </c:if>
                             </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">
+                                    共 ${requestScope.totalCount} 件商品，总计：
+                                </td>
+                                <td style="text-align: right; font-size: 18px; color: red; font-weight: bold;">
+                                    ¥${requestScope.totalPrice}
+                                </td>
+                            </tr>
+                            </tfoot>
                         </table>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="cart-shiping-update-wrapper">
-                                <h4>共${requestScope.totalCount}件商品 总价 ${requestScope.totalPrice}元</h4>
-                                <div class="cart-clear">
-                                    <a href="index.jsp">继 续 购 物</a>
-                                </div>
+                            <div class="cart-shiping-update-wrapper" style="text-align: center;">
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.admin}">
+                                        <a href="views/manage/manage_menu.jsp" style="display: inline-block; padding: 12px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 0 10px;">
+                                            <i class="icon-home"></i> 返回后台管理
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="customer" style="display: inline-block; padding: 12px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 0 10px;">
+                                            <i class="icon-handbag"></i> 继续购物
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <a href="orderServlet?action=orderManager" style="display: inline-block; padding: 12px 30px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px; margin: 0 10px;">
+                                    <i class="icon-list"></i> 返回订单列表
+                                </a>
                             </div>
                         </div>
                     </div>

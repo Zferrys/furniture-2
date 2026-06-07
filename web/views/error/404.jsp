@@ -61,9 +61,33 @@
             <div class="col-lg-7 col-md-12 ml-auto mr-auto">
                 <div class="login-register-wrapper">
                     <div class="login-register-tab-list nav">
-                        <a class="active" href="index.jsp">
+                        <a class="active" href="customer?pageNo=1">
                             <h4 style="color: darkblue">您访问的页面不存在 返回首页</h4>
                         </a>
+                    </div>
+                    <div class="tab-content">
+                        <div id="lg1" class="tab-pane active">
+                            <div class="login-form-container">
+                                <div class="login-register-form" style="text-align: center; padding: 30px;">
+                                    <i class="icon-eye-close" style="font-size: 80px; color: #dc3545; margin-bottom: 20px;"></i>
+                                    <h2 style="margin-bottom: 15px; color: #333;">404 - 页面未找到</h2>
+                                    <p style="margin-bottom: 25px; color: #666; font-size: 16px;">
+                                        抱歉，您访问的页面不存在或已被移除。
+                                    </p>
+                                    <div>
+                                        <a href="customer?pageNo=1" style="display: inline-block; padding: 12px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 10px;">
+                                            <i class="icon-home"></i> 返回首页
+                                        </a>
+                                        <a href="javascript:history.back()" style="display: inline-block; padding: 12px 30px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px; margin: 10px;">
+                                            <i class="icon-arrow-left"></i> 返回上一页
+                                        </a>
+                                    </div>
+                                    <p style="margin-top: 20px; color: #999; font-size: 14px;">
+                                        3秒后自动返回首页...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,6 +95,13 @@
     </div>
 </div>
 <!-- login area end -->
+
+<script type="text/javascript">
+    // 3秒后自动跳转到首页
+    setTimeout(function() {
+        window.location.href = "customer?pageNo=1";
+    }, 3000);
+</script>
 
 <!-- Footer Area Start -->
 <div class="footer-area">

@@ -15,13 +15,19 @@ public class adminServlet extends Basic_Servlet {
     protected void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
         String psd = req.getParameter("psd");
+        
+        if (name == null || name.isEmpty() || psd == null || psd.isEmpty()) {
+            req.setAttribute("msg", "用户名或密码不能为空");
+            req.getRequestDispatcher("/views/manage/manage_login.jsp").forward(req, resp);
+            return;
+        }
+        
         Admin admin = adminService.queryAdminByName(name);
-        if (adminService.login(admin.getName(), admin.getPsd())) {
+        if (admin != null && adminService.login(admin.getName(), admin.getPsd())) {
             req.getSession().setAttribute("admin", admin);
-            resp.sendRedirect("/furniture/views/manage/manage_menu.jsp");
+            resp.sendRedirect(req.getContextPath() + "/views/manage/manage_menu.jsp");
         } else {
             req.setAttribute("msg", "用户名或密码错误");
-            req.setAttribute("name", admin.getName());
             req.getRequestDispatcher("/views/manage/manage_login.jsp").forward(req, resp);
         }
     }

@@ -32,42 +32,52 @@
                 <!-- Header Action Start -->
                 <div class="col align-self-center">
                     <div class="header-actions">
+                        <div class="header_account_list">
+                            <a href="javascript:void(0)" class="header-action-btn search-btn"><i
+                                    class="icon-magnifier"></i></a>
+                            <div class="dropdown_search">
+                                <form class="action-form" action="customer" method="post">
+                                    <input type="hidden" name="action" value="searchByName">
+                                    <input class="form-control" placeholder="请输入查找的关键字" type="text"
+                                           name="name">
+                                    <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+                                </form>
+                            </div>
+                        </div>
                         <div class="header-bottom-set dropdown">
                             <c:if test="${empty sessionScope.member && empty sessionScope.admin }">
-                                <a href="views/member/login.jsp">请先登录进行购物</a>
+                                <a>请先登录</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
                                 <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
+                            <a href="customer">首页</a>
+                        </div>
+                        <div class="header-bottom-set dropdown">
                             <a href="orderServlet?action=orderManager">订单管理</a>
                         </div>
-                        <!-- Single Wedge Start -->
+                        <c:if test="${not empty sessionScope.admin}">
+                            <div class="header-bottom-set dropdown">
+                                <a href="views/manage/manage_menu.jsp">后台管理</a>
+                            </div>
+                        </c:if>
                         <c:if test="${not empty sessionScope.member }">
                             <div class="header-bottom-set dropdown">
-
                                 <a href="member?action=logout">安全退出</a>
-
                             </div>
                         </c:if>
                         <c:if test="${not empty sessionScope.admin }">
                             <div class="header-bottom-set dropdown">
-
                                 <a href="manage/admin?action=logout">安全退出</a>
-
                             </div>
                         </c:if>
-                        <%--<!-- Single Wedge End -->--%>
-                        <%--<a href="#offcanvas-cart"--%>
-                        <%--   class="header-action-btn header-action-btn-cart offcanvas-toggle pr-0">--%>
-                        <%--    <i class="icon-handbag"> 购物车</i>--%>
-                        <%--    <span class="header-action-num">88</span>--%>
-                        <%--</a>--%>
-                        <%--<a href="#offcanvas-mobile-menu"--%>
-                        <%--   class="header-action-btn header-action-btn-menu offcanvas-toggle d-lg-none">--%>
-                        <%--    <i class="icon-menu"></i>--%>
-                        <%--</a>--%>
+                        <a href="views/cart/cart.jsp"
+                           class="header-action-btn header-action-btn-cart pr-0">
+                            <i class="icon-handbag"> 购物车</i>
+                            <span class="header-action-num">${sessionScope.cart.totalCount}</span>
+                        </a>
                     </div>
                 </div>
                 <!-- Header Action End -->
@@ -94,23 +104,87 @@
     <!-- Main Menu End -->
 </div>
 <!-- Header Area End  -->
-<!-- login area start -->
-<div class="login-register-area pt-70px pb-100px">
+<!-- Checkout Success Area Start -->
+<div class="checkout-main-area pt-70px pb-100px">
     <div class="container">
         <div class="row">
-            <div class="col-lg-7 col-md-12 ml-auto mr-auto">
-                <div class="login-register-wrapper">
-                    <div class="login-register-tab-list nav">
-                        <a class="active" href="orderServlet?action=orderItemDetail&orderId=${requestScope.orderId}">
-                            <h4>订单已结算, 订单号-${requestScope.orderId}</h4>
-                        </a>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="checkout-wrapper">
+                    <!-- Success Icon -->
+                    <div class="checkout-success-icon" style="text-align: center; margin-bottom: 30px;">
+                        <i class="icon-check" style="font-size: 60px; color: #28a745;"></i>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 ml-auto mr-auto">
+                            <div class="alert alert-success" style="background: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; padding: 20px; margin-bottom: 30px;">
+                                <h3 style="color: #155724; margin-bottom: 15px;">
+                                    <i class="icon-check-circle"></i> 订单提交成功！
+                                </h3>
+                                <p style="color: #155724; font-size: 16px;">
+                                    您的订单号是：<strong style="font-size: 18px;">${requestScope.orderId}</strong>
+                                </p>
+                                <p style="color: #155724; font-size: 14px; margin-top: 10px;">
+                                    我们已收到您的订单，将尽快为您处理。您可以在订单管理中查看订单状态。
+                                </p>
+                            </div>
+                            
+                            <!-- Order Info -->
+                            <div class="checkout-order-info" style="background: #f8f9fa; border-radius: 5px; padding: 20px; margin-bottom: 20px;">
+                                <h4 style="margin-bottom: 15px; color: #333;">订单信息</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p style="margin-bottom: 10px;">
+                                            <strong>订单编号：</strong>${requestScope.orderId}
+                                        </p>
+                                        <p style="margin-bottom: 10px;">
+                                            <strong>下单时间：</strong><span id="order-time"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p style="margin-bottom: 10px;">
+                                            <strong>订单状态：</strong><span style="color: orange;">未发货</span>
+                                        </p>
+                                        <p style="margin-bottom: 10px;">
+                                            <strong>支付方式：</strong>货到付款
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="checkout-action-buttons" style="text-align: center; margin-top: 30px;">
+                                <a href="orderServlet?action=orderManager" 
+                                   style="display: inline-block; padding: 12px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 0 10px;">
+                                    <i class="icon-list"></i> 查看订单
+                                </a>
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.admin}">
+                                        <a href="views/manage/manage_menu.jsp" 
+                                           style="display: inline-block; padding: 12px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin: 0 10px;">
+                                            <i class="icon-home"></i> 返回后台管理
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="customer" 
+                                           style="display: inline-block; padding: 12px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin: 0 10px;">
+                                            <i class="icon-handbag"></i> 继续购物
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- login area end -->
+<!-- Checkout Success Area End -->
+
+<script type="text/javascript">
+    // 显示下单时间
+    document.getElementById('order-time').textContent = new Date().toLocaleString('zh-CN');
+</script>
 
 <!-- Footer Area Start -->
 <div class="footer-area">

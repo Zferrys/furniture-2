@@ -18,6 +18,7 @@ public class customerServlet extends Basic_Servlet {
         int begin = DataUtils.parseInt(req.getParameter("pageNo"), 1);
         int pageSize = DataUtils.parseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
         Page<Furn> page = furnService.getPageItems(begin, pageSize);
+        page.setUrl("customer?");
         req.setAttribute("page", page);
         req.getRequestDispatcher("views/customer/index.jsp").forward(req, resp);
 
@@ -38,6 +39,21 @@ public class customerServlet extends Basic_Servlet {
         req.setAttribute("page", page);
         req.getRequestDispatcher("views/customer/index.jsp").forward(req, resp);
 
+    }
+
+    protected void detail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = DataUtils.parseInt(req.getParameter("id"), 0);
+        if (id <= 0) {
+            resp.sendRedirect(req.getContextPath() + "/customer?pageNo=1");
+            return;
+        }
+        Furn furn = furnService.getFurnById(id);
+        if (furn == null) {
+            resp.sendRedirect(req.getContextPath() + "/customer?pageNo=1");
+            return;
+        }
+        req.setAttribute("furn", furn);
+        req.getRequestDispatcher("views/customer/furn_detail.jsp").forward(req, resp);
     }
 
 

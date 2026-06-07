@@ -22,25 +22,36 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String saveOrder(Cart cart, Integer memberId) {
+        String orderId = null;
+        try {
+            orderId = System.currentTimeMillis() + "" + memberId;
+            Order order = new Order(orderId, new Date(), cart.getTotalPrice(), 0, memberId);
+            orderDao.saveOrder(order);
 
-        String orderId = System.currentTimeMillis() + "" + memberId;
-        Order order = new Order(orderId, new Date(), cart.getTotalPrice(), 0, memberId);
-        orderDao.saveOrder(order);
+            Map<Integer, CartItem> items = cart.getItems();
+            for (Map.Entry<Integer, CartItem> entry : items.entrySet()) {
+                CartItem cartItem = entry.getValue();
+                OrderItem orderItem = new OrderItem(null, cartItem.getName(), cartItem.getCount(), cartItem.getPrice(), cartItem.getTotalPrice(), orderId);
+                orderItemDao.saveOrderItem(orderItem);
 
-        Map<Integer, CartItem> items = cart.getItems();
-        for (Map.Entry<Integer,CartItem> entry : items.entrySet()) {
-            CartItem cartItem = entry.getValue();
-            OrderItem orderItem = new OrderItem(null, cartItem.getName(), cartItem.getCount(), cartItem.getPrice(), cartItem.getTotalPrice(), orderId);
-            orderItemDao.saveOrderItem(orderItem);
+                //更新库存和销量
+                Furn furn = furnDao.queryFurnById(cartItem.getId());
+                if (furn == null) {
+                    throw new RuntimeException("商品不存在: " + cartItem.getId());
+                }
+                if (furn.getStore() < cartItem.getCount()) {
+                    throw new RuntimeException("库存不足: " + furn.getName());
+                }
+                furn.setSales(furn.getSales() + cartItem.getCount());
+                furn.setStore(furn.getStore() - cartItem.getCount());
+                furnDao.updateFurn(furn);
+            }
 
-            //更新库存和销量
-            Furn furn = furnDao.queryFurnById(cartItem.getId());
-            furn.setSales(furn.getSales() + cartItem.getCount());
-            furn.setStore(furn.getStore() - cartItem.getCount());
-            furnDao.updateFurn(furn);
+            cart.clear();
+        } catch (Exception e) {
+            // 事务会在Filter中自动回滚
+            throw new RuntimeException("订单创建失败: " + e.getMessage(), e);
         }
-
-        cart.clear();
         return orderId;
     }
 
@@ -63,4 +74,55 @@ public class OrderServiceImpl implements OrderService {
     public BigDecimal queryTotalPriceByOrderId(String orderId) {
         return orderItemDao.queryTotalPriceByOrderId(orderId);
     }
+
+    @Override
+    public int updateOrderStatus(String orderId, Integer status) {
+        Order order = queryOrderById(orderId);
+        if (order == null) {
+            throw new RuntimeException("订单不存在: " + orderId);
+        }
+        order.setStatus(status);
+        return orderDao.updateOrder(order);
+    }
+
+    @Override
+    public Order queryOrderById(String orderId) {
+        return orderDao.queryOrderById(orderId);
+    }
+
+    @Override
+    public List<Order> queryOrderListByAdminId() {
+        return orderDao.queryAllOrders();
+    }
+    
+    @Override
+    public Page<Order> queryOrdersByMemberIdByPage(Integer memberId, int pageNo, int pageSize) {
+        int totalRow = orderDao.queryOrderCountByMemberId(memberId);
+        int pageTotalCount = (totalRow + pageSize - 1) / pageSize;
+        int begin = (pageNo - 1) * pageSize;
+        List<Order> items = orderDao.queryOrdersByMemberIdByPage(memberId, begin, pageSize);
+        Page<Order> page = new Page<>();
+        page.setPageNo(pageNo);
+        page.setPageSize(pageSize);
+        page.setTotalRow(totalRow);
+        page.setPageTotalCount(pageTotalCount);
+        page.setItems(items);
+        return page;
+    }
+    
+    @Override
+    public Page<Order> queryAllOrdersByPage(int pageNo, int pageSize) {
+        int totalRow = orderDao.queryTotalOrderCount();
+        int pageTotalCount = (totalRow + pageSize - 1) / pageSize;
+        int begin = (pageNo - 1) * pageSize;
+        List<Order> items = orderDao.queryAllOrdersByPage(begin, pageSize);
+        Page<Order> page = new Page<>();
+        page.setPageNo(pageNo);
+        page.setPageSize(pageSize);
+        page.setTotalRow(totalRow);
+        page.setPageTotalCount(pageTotalCount);
+        page.setItems(items);
+        return page;
+    }
 }
+

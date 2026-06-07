@@ -8,13 +8,13 @@ public class Page<T> {
     private Integer pageSize;
     private Integer PageTotalCount;
     private Integer totalRow;
-    private List<Furn> items;
+    private List<T> items;
     private String url;
 
     public Page() {
     }
 
-    public Page(Integer pageNo, Integer pageSize, Integer pageTotalCount, Integer totalRow, List<Furn> items, String url) {
+    public Page(Integer pageNo, Integer pageSize, Integer pageTotalCount, Integer totalRow, List<T> items, String url) {
         this.pageNo = pageNo;
         this.pageSize = pageSize;
         PageTotalCount = pageTotalCount;
@@ -55,11 +55,11 @@ public class Page<T> {
         this.totalRow = totalRow;
     }
 
-    public List<Furn> getItems() {
+    public List<T> getItems() {
         return items;
     }
 
-    public void setItems(List<Furn> items) {
+    public void setItems(List<T> items) {
         this.items = items;
     }
 

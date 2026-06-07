@@ -14,10 +14,6 @@
     <script type="text/javascript" src="script/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            // $("button.add-to-cart").click(function () {
-            //     var furnId = $(this).attr("furnId");
-            //     location.href = "cartServlet?action=addCartItem&id=" + furnId;
-            // }
             $("button.add-to-cart").click(function () {
                     var furnId = $(this).attr("furnId");
                     $.post(
@@ -27,8 +23,6 @@
                             id: furnId
                         },
                         function (data) {
-                            // 更新购物车中的商品数量
-                            // console.log("totalCount = ",data.totalCount);
                             if (data.url === undefined) {
                                 $(".header-action-num").text(data.totalCount);
                             } else {
@@ -38,7 +32,42 @@
                         "json"
                     );
                 }
-            )
+            );
+
+            // 快速查看弹窗：点击时动态加载对应家居的信息
+            $("a[data-link-action='quickview']").click(function () {
+                var $card = $(this).closest(".product");
+                var imgSrc = $card.find(".image img").first().attr("src");
+                var name = $card.find(".content .title a").text();
+                var price = $card.find(".content .price .new").last().text();
+                var furnId = $card.find("button.add-to-cart").attr("furnId");
+
+                // 更新弹窗中的图片
+                $("#exampleModal .gallery-top img").attr("src", imgSrc);
+                $("#exampleModal .gallery-thumbs img").attr("src", imgSrc);
+                // 更新弹窗中的产品信息
+                $("#exampleModal .quickview-content h2").text(name);
+                $("#exampleModal .quickview-content .old-price").text(price);
+                // 设置弹窗中的加入购物车按钮
+                $("#exampleModal .modal-add-cart").attr("furnId", furnId);
+                if ($card.find("button.add-to-cart").prop("disabled")) {
+                    $("#exampleModal .modal-add-cart").prop("disabled", true).text("已售罄");
+                } else {
+                    $("#exampleModal .modal-add-cart").prop("disabled", false).text("Add To Cart");
+                }
+            });
+
+            // 弹窗中的加入购物车按钮
+            $("#exampleModal .modal-add-cart").click(function () {
+                var furnId = $(this).attr("furnId");
+                $.post("cartServlet", {action: "addCartItemByAjax", id: furnId}, function (data) {
+                    if (data.url === undefined) {
+                        $(".header-action-num").text(data.totalCount);
+                    } else {
+                        location.href = data.url;
+                    }
+                }, "json");
+            });
         })
     </script>
 </head>
@@ -84,6 +113,9 @@
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
+                            <a href="customer?pageNo=1">首页</a>
+                        </div>
+                        <div class="header-bottom-set dropdown">
                             <c:if test="${empty sessionScope.member && empty sessionScope.admin}">
                                 <a href="views/manage/manage_login.jsp">后台管理</a>
                             </c:if>
@@ -91,6 +123,11 @@
                                 <a href="orderServlet?action=orderManager">订单管理</a>
                             </c:if>
                         </div>
+                        <c:if test="${not empty sessionScope.admin}">
+                            <div class="header-bottom-set dropdown">
+                                <a href="views/manage/manage_menu.jsp">后台管理</a>
+                            </div>
+                        </c:if>
                         <c:if test="${not empty sessionScope.member }">
                             <div class="header-bottom-set dropdown">
 
@@ -164,7 +201,7 @@
                                     <!-- Single Prodect -->
                                     <div class="product">
                                         <div class="thumb">
-                                            <a href="shop-left-sidebar.html" class="image">
+                                            <a href="customer?action=detail&id=${furn.id}" class="image">
                                                 <img src="${furn.imgPath}" alt="Product"/>
                                                 <img class="hover-image" src="${furn.imgPath}"
                                                      alt="Product"/>
@@ -195,7 +232,7 @@
                                         </div>
                                         <div class="content">
                                             <h5 class="title">
-                                                <a href="shop-left-sidebar.html">${furn.name} </a></h5>
+                                                <a href="customer?action=detail&id=${furn.id}">${furn.name} </a></h5>
                                             <span class="price">
                                                 <span class="new">家居:　${furn.name}</span>
                                             </span>
@@ -280,7 +317,7 @@
         <div class="row">
             <!-- Banner Start -->
             <div class="col-lg-6 col-12 mb-md-30px mb-lm-30px" data-aos="fade-up" data-aos-delay="200">
-                <a href="shop-left-sidebar.html" class="banner">
+                <a href="customer?pageNo=1" class="banner">
                     <img src="assets/images/banner/1.jpg" alt=""/>
                 </a>
             </div>
@@ -288,7 +325,7 @@
 
             <!-- Banner Start -->
             <div class="col-lg-6 col-12" data-aos="fade-up" data-aos-delay="400">
-                <a href="shop-left-sidebar.html" class="banner">
+                <a href="customer?pageNo=1" class="banner">
                     <img src="assets/images/banner/2.jpg" alt=""/>
                 </a>
             </div>
@@ -462,13 +499,8 @@
                                 </div>
                             </div>
                             <div class="pro-details-quality">
-                                <div class="cart-plus-minus">
-                                    <input class="cart-plus-minus-box" type="text" name="qtybutton" value="1"/>
-                                </div>
                                 <div class="pro-details-cart btn-hover">
-                                    <button class="add-cart btn btn-primary btn-hover-primary ml-4"> Add To
-                                        Cart
-                                    </button>
+                                    <button class="add-cart btn btn-primary btn-hover-primary ml-4 modal-add-cart"> Add To Cart</button>
                                 </div>
                             </div>
                             <div class="pro-details-wish-com">

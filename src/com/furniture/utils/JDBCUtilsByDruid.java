@@ -82,6 +82,13 @@ public class JDBCUtilsByDruid {
         }
     }
 
+    /**
+     * 清理ThreadLocal中的连接
+     */
+    public static void clearConnection(){
+        threadLocalConn.remove();
+    }
+
 
     public static void close(ResultSet resultSet, Statement statement, Connection connection) {
         try {
