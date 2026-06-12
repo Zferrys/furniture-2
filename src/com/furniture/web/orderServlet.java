@@ -111,7 +111,7 @@ public class orderServlet extends Basic_Servlet {
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
             return;
         }
-        if (admin == null && (member == null || !member.getId().equals(order.getMemberId()))) {
+        if (admin == null && (member == null || member.getId() != order.getMemberId())) {
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
             return;
         }

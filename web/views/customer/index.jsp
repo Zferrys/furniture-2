@@ -16,22 +16,26 @@
         $(function () {
             $("button.add-to-cart").click(function () {
                     var furnId = $(this).attr("furnId");
-                    $.post(
-                        "cartServlet",
-                        {
+                    $.ajax({
+                        url: "cartServlet",
+                        type: "POST",
+                        data: {
                             action: "addCartItemByAjax",
                             id: furnId,
                             csrfToken: "${sessionScope.csrfToken}"
                         },
-                        function (data) {
+                        dataType: "json",
+                        success: function (data) {
                             if (data.url === undefined) {
                                 $(".header-action-num").text(data.totalCount);
                             } else {
                                 location.href = data.url;
                             }
                         },
-                        "json"
-                    );
+                        error: function () {
+                            location.href = "views/member/login.jsp";
+                        }
+                    });
                 }
             );
 
@@ -61,13 +65,22 @@
             // 弹窗中的加入购物车按钮
             $("#exampleModal .modal-add-cart").click(function () {
                 var furnId = $(this).attr("furnId");
-                $.post("cartServlet", {action: "addCartItemByAjax", id: furnId, csrfToken: "${sessionScope.csrfToken}"}, function (data) {
-                    if (data.url === undefined) {
-                        $(".header-action-num").text(data.totalCount);
-                    } else {
-                        location.href = data.url;
+                $.ajax({
+                    url: "cartServlet",
+                    type: "POST",
+                    data: {action: "addCartItemByAjax", id: furnId, csrfToken: "${sessionScope.csrfToken}"},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.url === undefined) {
+                            $(".header-action-num").text(data.totalCount);
+                        } else {
+                            location.href = data.url;
+                        }
+                    },
+                    error: function () {
+                        location.href = "views/member/login.jsp";
                     }
-                }, "json");
+                });
             });
         })
     </script>

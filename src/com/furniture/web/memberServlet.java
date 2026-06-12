@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +55,10 @@ public class memberServlet extends Basic_Servlet {
             }
             HttpSession session = req.getSession(true);
             session.setAttribute("member", realmember);
+            // 重建 CSRF token（旧 session 销毁后 token 丢失）
+            byte[] tokenBytes = new byte[32];
+            new SecureRandom().nextBytes(tokenBytes);
+            session.setAttribute("csrfToken", Base64.getEncoder().encodeToString(tokenBytes));
             req.getRequestDispatcher("/views/member/login_ok.jsp").forward(req, resp);
         } else {
             req.setAttribute("username", username);

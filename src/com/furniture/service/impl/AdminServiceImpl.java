@@ -8,14 +8,28 @@ import com.furniture.utils.PasswordUtils;
 
 public class AdminServiceImpl implements AdminService {
     private final AdminDao adminDao = new AdminDaoImpl();
+
     @Override
     public boolean login(String name, String pwd) {
-        // 先用用户名查出管理员，再用 PasswordUtils 校验密码（替代原来的明文SQL比较）
         Admin admin = adminDao.queryAdminByName(name);
         if (admin == null) {
             return false;
         }
-        return PasswordUtils.checkPassword(pwd, admin.getPsd());
+        String stored = admin.getPsd();
+        // 新格式 SHA-256 + 盐值
+        if (PasswordUtils.checkPassword(pwd, stored)) {
+            return true;
+        }
+        // 兼容旧格式 MD5（32位十六进制）
+        if (stored != null && stored.length() == 32 && PasswordUtils.isMd5Hex(stored)) {
+            String md5 = PasswordUtils.md5Hex(pwd);
+            if (stored.equalsIgnoreCase(md5)) {
+                // 自动升级为新格式
+                adminDao.updatePsd(name, PasswordUtils.hashPassword(pwd));
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

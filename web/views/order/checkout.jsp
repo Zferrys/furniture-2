@@ -48,8 +48,11 @@
                             <c:if test="${empty sessionScope.member && empty sessionScope.admin }">
                                 <a>请先登录</a>
                             </c:if>
-                            <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
+                            <c:if test="${not empty sessionScope.member}">
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/></a>
+                            </c:if>
+                            <c:if test="${not empty sessionScope.admin}">
+                                <a>欢迎: <c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">

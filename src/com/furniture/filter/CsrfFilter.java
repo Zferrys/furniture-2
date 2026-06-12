@@ -6,7 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -16,13 +19,16 @@ import java.util.Set;
  */
 public class CsrfFilter implements Filter {
 
-    /** 只读操作，无需 CSRF 校验 */
-    private static final Set<String> EXEMPT_ACTIONS = Set.of(
-        "page", "searchByName", "detail", "exitUsername", "exitCode"
+    /** 只读或公开操作，无需 CSRF 校验（login/register 已由验证码保护） */
+    private static final Set<String> EXEMPT_ACTIONS = Collections.unmodifiableSet(
+        new HashSet<>(Arrays.asList("page", "searchByName", "detail", "exitUsername", "exitCode",
+                                    "login", "memberLogin", "memberRegister"))
     );
 
     /** 安全的 HTTP 方法，不触发状态变更 */
-    private static final Set<String> SAFE_METHODS = Set.of("GET", "HEAD", "OPTIONS");
+    private static final Set<String> SAFE_METHODS = Collections.unmodifiableSet(
+        new HashSet<>(Arrays.asList("GET", "HEAD", "OPTIONS"))
+    );
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}

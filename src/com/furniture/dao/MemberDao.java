@@ -12,4 +12,5 @@ public interface MemberDao {
     public int queryMemberByName(String name);
     public boolean addMember(Member member);
     public Member queryMemberByNameAndPassword(String username,String password);
+    public int updatePassword(String username, String newPassword);
 }

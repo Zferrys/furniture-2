@@ -16,4 +16,10 @@ public class AdminDaoImpl extends BasicDAO<Admin> implements AdminDao {
         String sql = "select id,name,psd from admin where name = ?";
         return querySingle(sql, Admin.class, name);
     }
+
+    @Override
+    public int updatePsd(String name, String newPsd) {
+        String sql = "update admin set psd = ? where name = ?";
+        return update(sql, newPsd, name);
+    }
 }

@@ -37,16 +37,20 @@ public class MemberDaoImpl extends BasicDAO<Member> implements MemberDao {
 
     @Override
     public Member queryMemberByNameAndPassword(String username, String password) {
-        // Java 端校验密码，替代原来 SQL 端的 md5() 比较
+        // Java 端校验密码，兼容新旧格式
         Member member = getMemberByName(username);
         if (member == null) {
             return null;
         }
-        if (PasswordUtils.checkPassword(password, member.getPassword())) {
+        if (PasswordUtils.verify(password, member.getPassword())) {
             return member;
         }
         return null;
     }
 
-
+    @Override
+    public int updatePassword(String username, String newPassword) {
+        String sql = "update member set password = ? where username = ?";
+        return update(sql, newPassword, username);
+    }
 }

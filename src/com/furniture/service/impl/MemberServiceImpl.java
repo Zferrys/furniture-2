@@ -5,11 +5,8 @@ import com.furniture.dao.MemberDao;
 import com.furniture.dao.impl.MemberDaoImpl;
 import com.furniture.entity.Member;
 import com.furniture.service.MemberService;
+import com.furniture.utils.PasswordUtils;
 
-/**
- * @author zph
- * @version 1.0
- */
 public class MemberServiceImpl implements MemberService {
     private final MemberDao memberDao = new MemberDaoImpl();
 
@@ -29,7 +26,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member login(String username, String password) {
-        return memberDao.queryMemberByNameAndPassword(username, password);
+        Member member = memberDao.getMemberByName(username);
+        if (member == null) {
+            return null;
+        }
+        if (PasswordUtils.verify(password, member.getPassword())) {
+            // 旧 MD5 密码自动升级为新格式
+            if (PasswordUtils.isMd5Hex(member.getPassword())) {
+                memberDao.updatePassword(username, PasswordUtils.hashPassword(password));
+            }
+            return member;
+        }
+        return null;
     }
 
     @Override

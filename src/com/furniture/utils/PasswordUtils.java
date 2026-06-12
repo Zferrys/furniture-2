@@ -66,4 +66,41 @@ public class PasswordUtils {
             return false;
         }
     }
+
+    /**
+     * 计算字符串的 MD5 十六进制（32位，用于兼容旧密码）
+     */
+    public static String md5Hex(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(input.getBytes("UTF-8"));
+            StringBuilder sb = new StringBuilder(32);
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("MD5 计算失败", e);
+        }
+    }
+
+    /**
+     * 判断字符串是否为旧的 MD5 十六进制格式（32位十六进制）
+     */
+    public static boolean isMd5Hex(String s) {
+        return s != null && s.length() == 32 && s.matches("[0-9a-fA-F]+");
+    }
+
+    /**
+     * 密码验证（自动检测格式：SHA-256+盐值 或 MD5）
+     */
+    public static boolean verify(String input, String stored) {
+        if (checkPassword(input, stored)) {
+            return true;
+        }
+        if (isMd5Hex(stored) && stored.equalsIgnoreCase(md5Hex(input))) {
+            return true;
+        }
+        return false;
+    }
 }

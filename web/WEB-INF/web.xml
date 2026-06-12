@@ -14,6 +14,7 @@
         <url-pattern>/manage/furnManage</url-pattern>
         <url-pattern>/cartServlet</url-pattern>
         <url-pattern>/orderServlet</url-pattern>
+        <url-pattern>/customer</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>authFilter</filter-name>
