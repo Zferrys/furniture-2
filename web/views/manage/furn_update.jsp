@@ -134,14 +134,14 @@
                                         <input type="file" name="imgPath" id="" value="<c:out value="${requestScope.furn.imgPath}"/>" onchange="prev(this)"/>
                                     </div>
                                 </td>
-                                <td class="product-name"><input name="name" style="width: 60%" type="text" value="${requestScope.furn.name}"></td>
-                                <td class="product-name"><input name="market" style="width: 90%" type="text" value="${requestScope.furn.market}"></td>
-                                <td class="product-price-cart"><input name="price" style="width: 90%" type="text" value="${requestScope.furn.price}"></td>
+                                <td class="product-name"><input name="name" style="width: 60%" type="text" value="<c:out value="${requestScope.furn.name}"/>"></td>
+                                <td class="product-name"><input name="market" style="width: 90%" type="text" value="<c:out value="${requestScope.furn.market}"/>"></td>
+                                <td class="product-price-cart"><input name="price" style="width: 90%" type="text" value="<c:out value="${requestScope.furn.price}"/>"></td>
                                 <td class="product-quantity">
-                                    <input name="sales" style="width: 90%" type="number" value="${requestScope.furn.sales}" min="0">
+                                    <input name="sales" style="width: 90%" type="number" value="<c:out value="${requestScope.furn.sales}"/>" min="0">
                                 </td>
                                 <td class="product-quantity">
-                                    <input name="store" style="width: 90%" type="number" value="${requestScope.furn.store}" min="0">
+                                    <input name="store" style="width: 90%" type="number" value="<c:out value="${requestScope.furn.store}"/>" min="0">
                                 </td>
                                 <td>
 <!--                                    <a href="#"><i class="icon-pencil"></i></a>-->

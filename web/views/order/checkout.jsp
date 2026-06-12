@@ -49,7 +49,7 @@
                                 <a>请先登录</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">

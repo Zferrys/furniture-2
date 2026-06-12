@@ -74,7 +74,7 @@
                 <div class="alert alert-info" style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 5px; padding: 15px;">
                     <div class="row">
                         <div class="col-md-6">
-                            <strong><i class="icon-user"></i> 欢迎管理员：</strong>${sessionScope.admin.name}
+                            <strong><i class="icon-user"></i> 欢迎管理员：</strong><c:out value="${sessionScope.admin.name}"/>
                         </div>
                         <div class="col-md-6" style="text-align: right;">
                             <a href="manage/admin?action=logout" style="color: #721c24; text-decoration: none; font-weight: bold;">

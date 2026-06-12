@@ -37,7 +37,7 @@
                                 <a href="views/member/login.jsp">请先登录进行购物</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.admin }">
-                                <a>欢迎: ${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">

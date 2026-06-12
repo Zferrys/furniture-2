@@ -65,7 +65,7 @@
                         <div id="lg1" class="tab-pane active">
                             <div class="login-form-container">
                                 <div class="login-register-form">
-                                    <span style="font-weight: bold;color: gray;float: right">${requestScope.msg}</span>
+                                    <span style="font-weight: bold;color: gray;float: right"><c:out value="${requestScope.msg}"/></span>
                                     <form action="manage/admin" method="post">
                                         <input type="hidden" name="action" value="login">
                                         <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
