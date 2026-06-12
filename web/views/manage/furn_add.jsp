@@ -102,6 +102,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 <form action="manage/furnManage?action=add&pageNo=${param.pageNo}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                     <div class="table-content table-responsive cart-table-content">
                         <table>
                             <thead>

@@ -102,11 +102,21 @@ public class furnManageServlet extends Basic_Servlet {
             String pageNo = req.getParameter("pageNo");
             resp.sendRedirect(req.getContextPath() + "/manage/furnManage?action=page&pageNo=" + (pageNo != null ? pageNo : "1"));
         } else {
-            // 兼容非 multipart 请求（通过隐藏域传参）
-            Map<String, String[]> map = req.getParameterMap();
-            furn = DataUtils.copyParamToBean(map, new Furn());
-            if (furn.getImgPath() == null || furn.getImgPath().isEmpty()) {
+            // 兼容非 multipart 请求：显式字段映射（替代 BeanUtils.populate 防止 Mass Assignment）
+            try {
+                String fname = req.getParameter("name");
+                String market = req.getParameter("market");
+                String priceStr = req.getParameter("price");
+                String salesStr = req.getParameter("sales");
+                String storeStr = req.getParameter("store");
+                furn.setName(fname != null ? fname.trim() : null);
+                furn.setMarket(market != null ? market.trim() : null);
+                furn.setPrice(priceStr != null && !priceStr.isEmpty() ? new BigDecimal(priceStr.trim()) : BigDecimal.ZERO);
+                furn.setSales(DataUtils.parseInt(salesStr, 0));
+                furn.setStore(DataUtils.parseInt(storeStr, 0));
                 furn.setImgPath("assets/images/product-image/default.jpg");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
             furnService.addFurn(furn);
             String pageNo = req.getParameter("pageNo");
@@ -150,9 +160,21 @@ public class furnManageServlet extends Basic_Servlet {
                 throw new RuntimeException(e);
             }
         } else {
-            // 兼容非 multipart 请求
-            Map<String, String[]> map = req.getParameterMap();
-            furn = DataUtils.copyParamToBean(map, furn);
+            // 兼容非 multipart 请求：显式字段映射（替代 BeanUtils.populate 防止 Mass Assignment）
+            try {
+                String fname = req.getParameter("name");
+                String market = req.getParameter("market");
+                String priceStr = req.getParameter("price");
+                String salesStr = req.getParameter("sales");
+                String storeStr = req.getParameter("store");
+                if (fname != null) furn.setName(fname.trim());
+                if (market != null) furn.setMarket(market.trim());
+                if (priceStr != null && !priceStr.isEmpty()) furn.setPrice(new BigDecimal(priceStr.trim()));
+                if (salesStr != null) furn.setSales(DataUtils.parseInt(salesStr, furn.getSales()));
+                if (storeStr != null) furn.setStore(DataUtils.parseInt(storeStr, furn.getStore()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         // 输入校验
@@ -187,6 +209,7 @@ public class furnManageServlet extends Basic_Servlet {
 
     protected void page(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int begin = DataUtils.parseInt(req.getParameter("pageNo"), 1);
+        if (begin < 1) begin = 1;  // 防止负数页码
         int pageSize = DataUtils.parseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
         Page<Furn> page = furnService.getPageItems(begin, pageSize);
         // 设置分页 URL，以便前端使用

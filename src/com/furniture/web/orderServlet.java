@@ -99,16 +99,30 @@ public class orderServlet extends Basic_Servlet {
     protected void orderItemDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String orderId = req.getParameter("orderId");
         if (orderId == null || orderId.isEmpty()) {
-            req.setAttribute("msg", "订单号不能为空");
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
             return;
         }
+
+        // IDOR 防护：校验订单归属（管理员可查看所有，普通用户只能查看自己的）
+        Member member = (Member) req.getSession().getAttribute("member");
+        Admin admin = (Admin) req.getSession().getAttribute("admin");
+        Order order = orderService.queryOrderById(orderId);
+        if (order == null) {
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            return;
+        }
+        if (admin == null && (member == null || !member.getId().equals(order.getMemberId()))) {
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            return;
+        }
+
         List<OrderItem> orderItems = orderService.queryOrderItemsByOrderId(orderId);
         int totalCount = orderService.queryTotalFurnCountByOrderId(orderId);
         BigDecimal totalPrice = orderService.queryTotalPriceByOrderId(orderId);
         req.setAttribute("totalPrice", totalPrice);
         req.setAttribute("totalCount", totalCount);
         req.setAttribute("orderItems", orderItems);
+        req.setAttribute("order", order);
         req.getRequestDispatcher("views/order/order_detail.jsp").forward(req, resp);
     }
 

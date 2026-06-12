@@ -4,6 +4,7 @@ package com.furniture.dao.impl;
 import com.furniture.dao.BasicDAO;
 import com.furniture.dao.MemberDao;
 import com.furniture.entity.Member;
+import com.furniture.utils.PasswordUtils;
 
 /**
  * @author zph
@@ -28,14 +29,23 @@ public class MemberDaoImpl extends BasicDAO<Member> implements MemberDao {
 
     @Override
     public boolean addMember(Member member) {
-        String sql = "insert into member(username,password,email) values(?,md5(?),?)";
-        return update(sql, member.getUsername(), member.getPassword(), member.getEmail()) == 1;
+        // 使用 SHA-256 + 盐值哈希替代 MySQL md5()
+        String hashedPassword = PasswordUtils.hashPassword(member.getPassword());
+        String sql = "insert into member(username,password,email) values(?,?,?)";
+        return update(sql, member.getUsername(), hashedPassword, member.getEmail()) == 1;
     }
 
     @Override
     public Member queryMemberByNameAndPassword(String username, String password) {
-        String sql = "select id,username,password,email from member where username = ? and password = md5(?)";
-        return querySingle(sql, Member.class, username, password);
+        // Java 端校验密码，替代原来 SQL 端的 md5() 比较
+        Member member = getMemberByName(username);
+        if (member == null) {
+            return null;
+        }
+        if (PasswordUtils.checkPassword(password, member.getPassword())) {
+            return member;
+        }
+        return null;
     }
 
 

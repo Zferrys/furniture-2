@@ -16,6 +16,7 @@ public class customerServlet extends Basic_Servlet {
 
     protected void page(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int begin = DataUtils.parseInt(req.getParameter("pageNo"), 1);
+        if (begin < 1) begin = 1;  // 防止负数页码
         int pageSize = DataUtils.parseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
         Page<Furn> page = furnService.getPageItems(begin, pageSize);
         page.setUrl("customer?");
@@ -26,6 +27,7 @@ public class customerServlet extends Basic_Servlet {
 
     protected void searchByName(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int begin = DataUtils.parseInt(req.getParameter("pageNo"), 1);
+        if (begin < 1) begin = 1;  // 防止负数页码
         int pageSize = DataUtils.parseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
         String name = req.getParameter("name");
         StringBuilder url = new StringBuilder("customer?action=searchByName&");

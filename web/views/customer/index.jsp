@@ -20,7 +20,8 @@
                         "cartServlet",
                         {
                             action: "addCartItemByAjax",
-                            id: furnId
+                            id: furnId,
+                            csrfToken: "${sessionScope.csrfToken}"
                         },
                         function (data) {
                             if (data.url === undefined) {
@@ -60,7 +61,7 @@
             // 弹窗中的加入购物车按钮
             $("#exampleModal .modal-add-cart").click(function () {
                 var furnId = $(this).attr("furnId");
-                $.post("cartServlet", {action: "addCartItemByAjax", id: furnId}, function (data) {
+                $.post("cartServlet", {action: "addCartItemByAjax", id: furnId, csrfToken: "${sessionScope.csrfToken}"}, function (data) {
                     if (data.url === undefined) {
                         $(".header-action-num").text(data.totalCount);
                     } else {
@@ -97,6 +98,7 @@
                             <div class="dropdown_search">
                                 <form class="action-form" action="customer" method="post">
                                     <input type="hidden" name="action" value="searchByName">
+                                    <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                     <input class="form-control" placeholder="请输入查找的关键字" type="text"
                                            name="name">
                                     <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
@@ -109,7 +111,7 @@
                                 <a href="views/member/login.jsp">登录|注册</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
@@ -202,8 +204,8 @@
                                     <div class="product">
                                         <div class="thumb">
                                             <a href="customer?action=detail&id=${furn.id}" class="image">
-                                                <img src="${furn.imgPath}" alt="Product"/>
-                                                <img class="hover-image" src="${furn.imgPath}"
+                                                <img src="<c:out value="${furn.imgPath}"/>" alt="Product"/>
+                                                <img class="hover-image" src="<c:out value="${furn.imgPath}"/>"
                                                      alt="Product"/>
                                             </a>
                                             <span class="badges">
@@ -232,21 +234,21 @@
                                         </div>
                                         <div class="content">
                                             <h5 class="title">
-                                                <a href="customer?action=detail&id=${furn.id}">${furn.name} </a></h5>
+                                                <a href="customer?action=detail&id=${furn.id}"><c:out value="${furn.name}"/></a></h5>
                                             <span class="price">
-                                                <span class="new">家居:　${furn.name}</span>
+                                                <span class="new">家居:　<c:out value="${furn.name}"/></span>
                                             </span>
                                             <span class="price">
-                                                <span class="new">厂商:　${furn.market}</span>
+                                                <span class="new">厂商:　<c:out value="${furn.market}"/></span>
                                             </span>
                                             <span class="price">
-                                                <span class="new">价格:　￥${furn.price}</span>
+                                                <span class="new">价格:　￥<c:out value="${furn.price}"/></span>
                                             </span>
                                             <span class="price">
-                                                <span class="new">销量:　${furn.sales}</span>
+                                                <span class="new">销量:　<c:out value="${furn.sales}"/></span>
                                             </span>
                                             <span class="price">
-                                                <span class="new">库存:　${furn.store}</span>
+                                                <span class="new">库存:　<c:out value="${furn.store}"/></span>
                                             </span>
                                         </div>
                                     </div>

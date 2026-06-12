@@ -36,7 +36,7 @@
                                 <a href="views/member/login.jsp">你好: 请登录</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member }">
-                                <a>欢迎: ${sessionScope.member.username}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
@@ -99,7 +99,7 @@
                                 <div class="login-register-form" style="text-align: center;">
                                     <div style="padding: 30px;">
                                         <i class="icon-check" style="font-size: 60px; color: #28a745; margin-bottom: 20px;"></i>
-                                        <h3 style="margin-bottom: 15px; color: #28a745;">欢迎回来，${sessionScope.member.username}！</h3>
+                                        <h3 style="margin-bottom: 15px; color: #28a745;">欢迎回来，<c:out value="${sessionScope.member.username}"/>！</h3>
                                         <p style="margin-bottom: 25px; color: #666;">
                                             您已成功登录，请选择以下操作：
                                         </p>

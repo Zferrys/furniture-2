@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>-家居网购</title>
-    <base href=<%= request.getContextPath()+"/"%>>
+    <base href="<%= request.getContextPath()+"/"%>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="stylesheet" href="assets/css/vendor/vendor.min.css"/>
     <link rel="stylesheet" href="assets/css/plugins/plugins.min.css"/>
@@ -68,6 +68,7 @@
                                     <span style="font-weight: bold;color: gray;float: right">${requestScope.msg}</span>
                                     <form action="manage/admin" method="post">
                                         <input type="hidden" name="action" value="login">
+                                        <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                         <input type="text" name="name" placeholder="Username"/>
                                         <input type="password" name="psd" placeholder="Password"/>
                                         <div class="button-box">

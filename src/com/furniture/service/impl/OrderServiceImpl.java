@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class OrderServiceImpl implements OrderService {
@@ -24,7 +25,8 @@ public class OrderServiceImpl implements OrderService {
     public String saveOrder(Cart cart, Integer memberId) {
         String orderId = null;
         try {
-            orderId = System.currentTimeMillis() + "" + memberId;
+            // 使用 UUID 生成不可预测的订单号
+            orderId = UUID.randomUUID().toString().replace("-", "").substring(0, 16).toUpperCase();
             Order order = new Order(orderId, new Date(), cart.getTotalPrice(), 0, memberId);
             orderDao.saveOrder(order);
 
@@ -34,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
                 OrderItem orderItem = new OrderItem(null, cartItem.getName(), cartItem.getCount(), cartItem.getPrice(), cartItem.getTotalPrice(), orderId);
                 orderItemDao.saveOrderItem(orderItem);
 
-                //更新库存和销量
+                // 原子更新库存和销量，防止并发超卖
                 Furn furn = furnDao.queryFurnById(cartItem.getId());
                 if (furn == null) {
                     throw new RuntimeException("商品不存在: " + cartItem.getId());
@@ -42,14 +44,14 @@ public class OrderServiceImpl implements OrderService {
                 if (furn.getStore() < cartItem.getCount()) {
                     throw new RuntimeException("库存不足: " + furn.getName());
                 }
-                furn.setSales(furn.getSales() + cartItem.getCount());
-                furn.setStore(furn.getStore() - cartItem.getCount());
-                furnDao.updateFurn(furn);
+                int affectedRows = furnDao.updateStockAtomic(cartItem.getId(), cartItem.getCount(), cartItem.getCount());
+                if (affectedRows == 0) {
+                    throw new RuntimeException("库存不足，无法下单: " + cartItem.getName());
+                }
             }
 
             cart.clear();
         } catch (Exception e) {
-            // 事务会在Filter中自动回滚
             throw new RuntimeException("订单创建失败: " + e.getMessage(), e);
         }
         return orderId;

@@ -1,0 +1,11 @@
+# Druid 数据库连接池配置模板
+# 复制此文件为 druid.properties 并填入真实凭据
+# 注意：druid.properties 已加入 .gitignore，不会被提交到版本控制
+driverClassName=com.mysql.jdbc.Driver
+url=jdbc:mysql://localhost:3306/furniture?rewriteBatchedStatements=true
+username=REPLACE_ME
+password=REPLACE_ME
+initialSize=10
+minIdle=5
+maxActive=20
+maxWait=5000

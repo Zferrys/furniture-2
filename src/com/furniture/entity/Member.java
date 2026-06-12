@@ -54,10 +54,9 @@ public class Member {
 
     @Override
     public String toString() {
-        return "member{" +
+        return "Member{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

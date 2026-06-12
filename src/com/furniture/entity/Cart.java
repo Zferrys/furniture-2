@@ -13,15 +13,15 @@ public class Cart {
     public Cart() {
     }
 
-    public void deleteItem(int id) {
+    public synchronized void deleteItem(int id) {
         items.remove(id);
     }
 
-    public void clear() {
+    public synchronized void clear() {
         items.clear();
     }
 
-    public void updateCount(int id, int count) {
+    public synchronized void updateCount(int id, int count) {
         CartItem item = items.get(id);
         if (null != item) {
             item.setCount(count);
@@ -42,7 +42,7 @@ public class Cart {
         return totalPrice;
     }
 
-    public void addItem(CartItem cartItem) {
+    public synchronized void addItem(CartItem cartItem) {
 
         CartItem item = items.get(cartItem.getId());
         if (null == item) {

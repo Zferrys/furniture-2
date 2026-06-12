@@ -22,4 +22,7 @@ public interface FurnDao {
 
     public int updateStock(int furnId, int store);
 
+    /** 原子更新库存和销量，防止并发超卖 */
+    public int updateStockAtomic(int furnId, int salesIncrement, int storeDecrement);
+
 }

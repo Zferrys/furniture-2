@@ -62,7 +62,16 @@ public class AuthFilter implements Filter {
         } else {
             Member member = (Member) request.getSession().getAttribute("member");
             Admin admin = (Admin) request.getSession().getAttribute("admin");
-            if (member == null && admin == null) {
+            // FIX: AJAX请求也需要检查 /manage/ 路径的管理员权限
+            if (url.contains("/manage/")) {
+                if (admin == null) {
+                    Map<String, Object> resMap = new HashMap<>();
+                    resMap.put("url", "views/manage/manage_login.jsp");
+                    String resJson = new Gson().toJson(resMap);
+                    servletResponse.getWriter().write(resJson);
+                    return;
+                }
+            } else if (member == null && admin == null) {
                 Map<String, Object> resMap = new HashMap<>();
                 resMap.put("url", "views/member/login.jsp");
                 String resJson = new Gson().toJson(resMap);

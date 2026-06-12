@@ -34,7 +34,7 @@
                     }
                 }
                 $button.parent().find("input").val(newVal);
-                location.href = "cartServlet?action=updateCount&id=" + $button.parent().find("input").attr("furnId") + "&count=" + newVal
+                location.href = "cartServlet?action=updateCount&id=" + $button.parent().find("input").attr("furnId") + "&count=" + newVal + "&csrfToken=${sessionScope.csrfToken}"
             });
 
             //清除某个商品
@@ -44,7 +44,7 @@
                 if (!confirm("您确定要删除【" + furnName + "】吗？")) {
                     return;
                 }
-                location.href = "cartServlet?action=deleteCartItem&id=" + furnId;
+                location.href = "cartServlet?action=deleteCartItem&id=" + furnId + "&csrfToken=${sessionScope.csrfToken}";
             });
 
             //清除购物车
@@ -52,7 +52,7 @@
                 if (!confirm("您确定要清空购物车吗？")) {
                     return;
                 }
-                location.href = "cartServlet?action=clearCartItem";
+                location.href = "cartServlet?action=clearCartItem&csrfToken=${sessionScope.csrfToken}";
             });
 
 
@@ -85,6 +85,7 @@
                             <div class="dropdown_search">
                                 <form class="action-form" action="customer" method="post">
                                     <input type="hidden" name="action" value="searchByName">
+                                    <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                     <input class="form-control" placeholder="请输入查找的关键字" type="text"
                                            name="name">
                                     <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
@@ -96,7 +97,7 @@
                                 <a>请先登录</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
@@ -191,10 +192,10 @@
                                     <tr>
                                         <td class="product-thumbnail">
                                             <a href="#"><img class="img-responsive ml-3"
-                                                             src="${entry.value.imgPath}"
+                                                             src="<c:out value="${entry.value.imgPath}"/>"
                                                              alt=""/></a>
                                         </td>
-                                        <td class="product-name"><a href="#">${entry.value.name}</a></td>
+                                        <td class="product-name"><a href="#"><c:out value="${entry.value.name}"/></a></td>
                                         <td class="product-price-cart"><span class="amount">¥${entry.value.price}</span>
                                         </td>
                                         <td class="product-quantity">
@@ -219,7 +220,7 @@
                             <div class="cart-shiping-update-wrapper">
                                 <h4>共${sessionScope.cart.totalCount}件商品 总价 ${sessionScope.cart.totalPrice}元</h4>
                                 <div class="cart-shiping-update">
-                                    <a href="orderServlet?action=saveOrder">生 成 订 单</a>
+                                    <a href="orderServlet?action=saveOrder&csrfToken=${sessionScope.csrfToken}">生 成 订 单</a>
                                 </div>
                                 <div class="cart-clear">
                                     <button>继 续 购 物</button>

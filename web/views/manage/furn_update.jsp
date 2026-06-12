@@ -110,6 +110,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 <form action="manage/furnManage?action=update&id=${requestScope.furn.id}&pageNo=${param.pageNo}" method="post" enctype="multipart/form-data" >
+                    <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                     <div class="table-content table-responsive cart-table-content">
                         <table>
                             <thead>
@@ -128,9 +129,9 @@
                                 <td class="product-thumbnail">
                                     <div id="pic">
                                         <img id="prevView" class="img-responsive ml-3"
-                                             src="${requestScope.furn.imgPath}"
+                                             src="<c:out value="${requestScope.furn.imgPath}"/>"
                                              alt=""/>
-                                        <input type="file" name="imgPath" id="" value="${requestScope.furn.imgPath}" onchange="prev(this)"/>
+                                        <input type="file" name="imgPath" id="" value="<c:out value="${requestScope.furn.imgPath}"/>" onchange="prev(this)"/>
                                     </div>
                                 </td>
                                 <td class="product-name"><input name="name" style="width: 60%" type="text" value="${requestScope.furn.name}"></td>

@@ -45,9 +45,10 @@
                     });
             })
 
-            if ("${requestScope.active}" === "register") {
+            <%-- 使用 JSTL 替代 EL-in-JS，防止 JS 上下文 XSS --%>
+            <c:if test="${requestScope.active eq 'register'}">
                 $("#tab_register")[0].click();
-            }
+            </c:if>
 
             $("#codeImg").click(function () {
                 $(this).attr("src", "kaptchaServlet?time=" + new Date().getTime());
@@ -134,6 +135,7 @@
                             <div class="dropdown_search">
                                 <form class="action-form" action="customer" method="post">
                                     <input type="hidden" name="action" value="searchByName">
+                                    <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                     <input class="form-control" placeholder="请输入查找的关键字" type="text"
                                            name="name">
                                     <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
@@ -146,7 +148,7 @@
                                 <a href="views/member/login.jsp">登录|注册</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
@@ -218,10 +220,11 @@
                             <div class="login-form-container">
                                 <div class="login-register-form">
                                     <span class="errorLoginMsg"
-                                          style="float: right; font-weight: bold; font-size: 10pt; margin-left: 10px; color: gray">${requestScope.msg}</span>
+                                          style="float: right; font-weight: bold; font-size: 10pt; margin-left: 10px; color: gray"><c:out value="${requestScope.msg}"/></span>
                                     <form action="member" method="post">
                                         <input type="hidden" name="action" value="memberLogin">
-                                        <input type="text" name="username" value="${requestScope.username}"
+                                        <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
+                                        <input type="text" name="username" value="<c:out value="${requestScope.username}"/>"
                                                placeholder="Username" id="loginName"/>
                                         <input type="password" name="password" placeholder="Password" id="loginPsd"/>
                                         <div class="button-box">
@@ -240,15 +243,16 @@
                             <div class="login-form-container">
                                 <div class="login-register-form">
                                     <span class="errorMsg"
-                                          style="float: right; font-weight: bold; font-size: 20pt; margin-left: 10px;">${requestScope.msg_register}</span>
+                                          style="float: right; font-weight: bold; font-size: 20pt; margin-left: 10px;"><c:out value="${requestScope.msg_register}"/></span>
                                     <form action="member" method="post">
                                         <input type="hidden" name="action" value="memberRegister">
+                                        <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                         <input type="text" id="username" name="username" placeholder="Username"
-                                               value="${requestScope.username}"/>
+                                               value="<c:out value="${requestScope.username}"/>"/>
                                         <input type="password" id="password" name="password" placeholder="输入密码"/>
                                         <input type="password" id="repwd" name="repassword" placeholder="确认密码"/>
                                         <input name="email" id="email" placeholder="电子邮件" type="email"
-                                               value="${requestScope.email}"/>
+                                               value="<c:out value="${requestScope.email}"/>"/>
                                         <input type="text" id="code" name="code" style="width: 50%"
                                                placeholder="验证码"/>　　<img alt="" src="kaptchaServlet"
                                                                             style="width: 120px;height: 50px;cursor: pointer;"

@@ -18,7 +18,7 @@
             if (!confirm('确定要标记订单【' + orderId + '】为' + statusText + '状态吗？')) {
                 return;
             }
-            location.href = 'orderServlet?action=updateOrderStatus&orderId=' + orderId + '&status=' + status;
+            location.href = 'orderServlet?action=updateOrderStatus&orderId=' + orderId + '&status=' + status + '&csrfToken=${sessionScope.csrfToken}';
         }
     </script>
 </head>
@@ -47,6 +47,7 @@
                             <div class="dropdown_search">
                                 <form class="action-form" action="customer" method="post">
                                     <input type="hidden" name="action" value="searchByName">
+                                    <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                     <input class="form-control" placeholder="请输入查找的关键字" type="text"
                                            name="name">
                                     <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
@@ -58,7 +59,7 @@
                                 <a>请先登录</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
@@ -106,7 +107,7 @@
                                 <a href="views/member/login.jsp">请先登录进行购物</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
@@ -170,9 +171,9 @@
                                 <c:when test="${not empty requestScope.page.items}">
                                     <c:forEach items="${requestScope.page.items}" var="order">
                                         <tr>
-                                            <td class="product-name">${order.id}</td>
-                                            <td class="product-name">${order.createTime}</td>
-                                            <td class="product-price-cart"><span class="amount">¥${order.price}</span></td>
+                                            <td class="product-name"><c:out value="${order.id}"/></td>
+                                            <td class="product-name"><c:out value="${order.createTime}"/></td>
+                                            <td class="product-price-cart"><span class="amount">¥<c:out value="${order.price}"/></span></td>
                                             <td class="product-name">
                                                 <c:choose>
                                                     <c:when test="${order.status==0}"><span style="color: orange;">未发货</span></c:when>
@@ -188,12 +189,12 @@
                                             <c:if test="${not empty sessionScope.admin}">
                                                 <td class="product-remove">
                                                     <c:if test="${order.status == 0}">
-                                                        <a href="javascript:void(0);" onclick="updateStatus('${order.id}', 1)" title="标记发货">
+                                                        <a href="javascript:void(0);" onclick="updateStatus('<c:out value="${order.id}"/>', 1)" title="标记发货">
                                                             <i class="icon-truck"></i> 发货
                                                         </a>
                                                     </c:if>
                                                     <c:if test="${order.status == 1}">
-                                                        <a href="javascript:void(0);" onclick="updateStatus('${order.id}', 2)" title="标记完成">
+                                                        <a href="javascript:void(0);" onclick="updateStatus('<c:out value="${order.id}"/>', 2)" title="标记完成">
                                                             <i class="icon-check"></i> 完成
                                                         </a>
                                                     </c:if>

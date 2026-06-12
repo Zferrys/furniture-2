@@ -22,7 +22,6 @@ public class Admin {
         return "Admin{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", psd='" + psd + '\'' +
                 '}';
     }
 

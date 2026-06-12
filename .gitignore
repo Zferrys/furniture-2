@@ -28,5 +28,8 @@ bin/
 ### CodeBuddy ###
 .codebuddy/
 
+### Database Credentials ###
+src/druid.properties
+
 ### Mac OS ###
 .DS_Store

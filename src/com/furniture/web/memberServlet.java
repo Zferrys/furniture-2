@@ -46,7 +46,12 @@ public class memberServlet extends Basic_Servlet {
         Member member = new Member(null, username, password, null);
         Member realmember = memberService.login(member.getUsername(), member.getPassword());
         if (realmember != null) {
-            HttpSession session = req.getSession();
+            // Session固定攻击防护：先销毁旧session再创建新session
+            HttpSession oldSession = req.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate();
+            }
+            HttpSession session = req.getSession(true);
             session.setAttribute("member", realmember);
             req.getRequestDispatcher("/views/member/login_ok.jsp").forward(req, resp);
         } else {
@@ -68,10 +73,14 @@ public class memberServlet extends Basic_Servlet {
         if (username == null || password == null || repassword == null || email == null || code == null ||
                 username.isEmpty() || password.isEmpty() || repassword.isEmpty() || email.isEmpty() || code.isEmpty()) {
             request.setAttribute("msg_register", "请完整填写注册信息");
+            request.setAttribute("active", "register");
+            request.getRequestDispatcher("/views/member/login.jsp").forward(request, response);
             return;
         }
         Member member = new Member(null, username, password, email);
         if (token != null && token.equalsIgnoreCase(code)) {
+            // 验证通过后清除验证码，防止重复使用
+            session.removeAttribute(KAPTCHA_SESSION_KEY);
 
             if (memberService.register(member)) {
                 request.getRequestDispatcher("/views/member/register_ok.html").forward(request, response);

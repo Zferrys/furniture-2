@@ -121,7 +121,7 @@
                                     <i class="icon-check-circle"></i> 订单提交成功！
                                 </h3>
                                 <p style="color: #155724; font-size: 16px;">
-                                    您的订单号是：<strong style="font-size: 18px;">${requestScope.orderId}</strong>
+                                    您的订单号是：<strong style="font-size: 18px;"><c:out value="${requestScope.orderId}"/></strong>
                                 </p>
                                 <p style="color: #155724; font-size: 14px; margin-top: 10px;">
                                     我们已收到您的订单，将尽快为您处理。您可以在订单管理中查看订单状态。
@@ -134,7 +134,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <p style="margin-bottom: 10px;">
-                                            <strong>订单编号：</strong>${requestScope.orderId}
+                                            <strong>订单编号：</strong><c:out value="${requestScope.orderId}"/>
                                         </p>
                                         <p style="margin-bottom: 10px;">
                                             <strong>下单时间：</strong><span id="order-time"></span>

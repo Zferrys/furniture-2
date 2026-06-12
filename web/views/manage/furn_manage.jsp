@@ -119,17 +119,17 @@
                             <c:forEach items="${requestScope.page.items}" var="furn">
                                 <tr>
                                     <td class="product-thumbnail">
-                                        <a href="#"><img class="img-responsive ml-3" src="${furn.imgPath}"
+                                        <a href="#"><img class="img-responsive ml-3" src="<c:out value="${furn.imgPath}"/>"
                                                 alt=""/></a>
                                     </td>
-                                    <td class="product-name"><a href="#">${furn.name}</a></td>
-                                    <td class="product-name"><a href="#">${furn.market}</a></td>
-                                    <td class="product-price-cart"><span class="amount">¥${furn.price}</span></td>
+                                    <td class="product-name"><a href="#"><c:out value="${furn.name}"/></a></td>
+                                    <td class="product-name"><a href="#"><c:out value="${furn.market}"/></a></td>
+                                    <td class="product-price-cart"><span class="amount">¥<c:out value="${furn.price}"/></span></td>
                                     <td class="product-quantity">
-                                            ${furn.sales}
+                                            <c:out value="${furn.sales}"/>
                                     </td>
                                     <td class="product-quantity">
-                                            ${furn.store}
+                                            <c:out value="${furn.store}"/>
                                     </td>
                                     <td class="product-remove">
                                         <a href="manage/furnManage?action=queryFurnById&id=${furn.id}&pageNo=${requestScope.page.pageNo}" title="编辑">

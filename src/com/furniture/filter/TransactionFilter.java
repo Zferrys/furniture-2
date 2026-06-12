@@ -17,7 +17,7 @@ public class TransactionFilter implements Filter {
         try {
             filterChain.doFilter(servletRequest, servletResponse);
             JDBCUtilsByDruid.commit();
-        } catch (IOException | ServletException e) {
+        } catch (Exception e) {
             JDBCUtilsByDruid.rollback();
             throw new RuntimeException(e);
         } finally {

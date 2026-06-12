@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge"/>
-    <title>${requestScope.furn.name} - 商品详情</title>
+    <title><c:out value="${requestScope.furn.name}"/> - 商品详情</title>
     <base href="<%= request.getContextPath()+"/"%>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="assets/css/vendor/vendor.min.css"/>
@@ -71,7 +71,7 @@
         $(function () {
             $("button.add-to-cart").click(function () {
                 var furnId = $(this).attr("furnId");
-                $.post("cartServlet", {action: "addCartItemByAjax", id: furnId}, function (data) {
+                $.post("cartServlet", {action: "addCartItemByAjax", id: furnId, csrfToken: "${sessionScope.csrfToken}"}, function (data) {
                     if (data.url === undefined) {
                         $(".header-action-num").text(data.totalCount);
                     } else {
@@ -101,6 +101,7 @@
                             <div class="dropdown_search">
                                 <form class="action-form" action="customer" method="post">
                                     <input type="hidden" name="action" value="searchByName">
+                                    <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                     <input class="form-control" placeholder="请输入查找的关键字" type="text" name="name">
                                     <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
                                 </form>
@@ -111,7 +112,7 @@
                                 <a href="views/member/login.jsp">登录|注册</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown"><a href="customer?pageNo=1">首页</a></div>
@@ -164,41 +165,41 @@
         <!-- Breadcrumb -->
         <ul class="detail-breadcrumb">
             <li><a href="customer?pageNo=1">首页</a></li>
-            <li class="active">${furn.name}</li>
+            <li class="active"><c:out value="${furn.name}"/></li>
         </ul>
 
         <div class="row">
             <!-- Image -->
             <div class="col-lg-6 col-md-6 mb-30px">
                 <div class="detail-card detail-img-wrap">
-                    <img src="${furn.imgPath}" alt="${furn.name}"/>
+                    <img src="<c:out value="${furn.imgPath}"/>" alt="<c:out value="${furn.name}"/>"/>
                 </div>
             </div>
 
             <!-- Info -->
             <div class="col-lg-6 col-md-6">
                 <div class="detail-card detail-info">
-                    <h2 class="detail-title">${furn.name}</h2>
+                    <h2 class="detail-title"><c:out value="${furn.name}"/></h2>
 
                     <div class="detail-price-row">
                         <span class="detail-price-label">售价</span>
-                        <span class="detail-price-val">￥${furn.price}</span>
+                        <span class="detail-price-val">￥<c:out value="${furn.price}"/></span>
                     </div>
 
                     <div class="detail-specs">
                         <div class="spec-row">
                             <span class="spec-key">厂商</span>
-                            <span class="spec-val">${furn.market}</span>
+                            <span class="spec-val"><c:out value="${furn.market}"/></span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-key">销量</span>
-                            <span class="spec-val" style="color:#e74c3c;font-weight:600">${furn.sales} 件</span>
+                            <span class="spec-val" style="color:#e74c3c;font-weight:600"><c:out value="${furn.sales}"/> 件</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-key">库存</span>
                             <c:choose>
-                                <c:when test="${furn.store > 10}"><span class="spec-val stock-ok">${furn.store} 件（有货）</span></c:when>
-                                <c:when test="${furn.store > 0}"><span class="spec-val stock-warn">${furn.store} 件（库存紧张）</span></c:when>
+                                <c:when test="${furn.store > 10}"><span class="spec-val stock-ok"><c:out value="${furn.store}"/> 件（有货）</span></c:when>
+                                <c:when test="${furn.store > 0}"><span class="spec-val stock-warn"><c:out value="${furn.store}"/> 件（库存紧张）</span></c:when>
                                 <c:otherwise><span class="spec-val stock-none">已售罄</span></c:otherwise>
                             </c:choose>
                         </div>

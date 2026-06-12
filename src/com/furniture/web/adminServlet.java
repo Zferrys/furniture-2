@@ -7,6 +7,7 @@ import com.furniture.service.impl.AdminServiceImpl;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class adminServlet extends Basic_Servlet {
@@ -23,8 +24,15 @@ public class adminServlet extends Basic_Servlet {
         }
         
         Admin admin = adminService.queryAdminByName(name);
-        if (admin != null && adminService.login(admin.getName(), admin.getPsd())) {
-            req.getSession().setAttribute("admin", admin);
+        // FIX: 使用用户输入的 name 和 psd，而非数据库查出的值（否则任意用户名即可绕过密码验证）
+        if (admin != null && adminService.login(name, psd)) {
+            // Session固定攻击防护：先销毁旧session再创建新session
+            HttpSession oldSession = req.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate();
+            }
+            HttpSession session = req.getSession(true);
+            session.setAttribute("admin", admin);
             resp.sendRedirect(req.getContextPath() + "/views/manage/manage_menu.jsp");
         } else {
             req.setAttribute("msg", "用户名或密码错误");

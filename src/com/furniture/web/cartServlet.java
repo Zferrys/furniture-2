@@ -6,6 +6,7 @@ import com.furniture.entity.Furn;
 import com.furniture.service.FurnService;
 import com.furniture.service.impl.FurnServiceImpl;
 import com.furniture.utils.DataUtils;
+import com.furniture.utils.WebUtils;
 import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
@@ -24,7 +25,7 @@ public class cartServlet extends Basic_Servlet {
         //
         if (furn == null || furn.getStore() <= 0) {
             req.setAttribute("msg", "库存不足，无法添加到购物车");
-            resp.sendRedirect(req.getHeader("Referer"));
+            resp.sendRedirect(WebUtils.getSafeRedirectUrl(req));
             return;
         }
 
@@ -35,7 +36,7 @@ public class cartServlet extends Basic_Servlet {
             req.getSession().setAttribute("cart", cart);
         }
         cart.addItem(cartItem);
-        resp.sendRedirect(req.getHeader("Referer"));
+        resp.sendRedirect(WebUtils.getSafeRedirectUrl(req));
     }
 
     protected void addCartItemByAjax(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,7 +45,7 @@ public class cartServlet extends Basic_Servlet {
         //
         if (furn == null || furn.getStore() <= 0) {
             req.setAttribute("msg", "库存不足，无法添加到购物车");
-            resp.sendRedirect(req.getHeader("Referer"));
+            resp.sendRedirect(WebUtils.getSafeRedirectUrl(req));
             return;
         }
 
@@ -65,11 +66,13 @@ public class cartServlet extends Basic_Servlet {
     protected void updateCount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = DataUtils.parseInt(req.getParameter("id"), 0);
         int count = DataUtils.parseInt(req.getParameter("count"), 1);
+        // 防止负数数量
+        if (count <= 0) count = 1;
         Cart cart = (Cart) req.getSession().getAttribute("cart");
         if (null != cart) {
             cart.updateCount(id, count);
         }
-        resp.sendRedirect(req.getHeader("Referer"));
+        resp.sendRedirect(WebUtils.getSafeRedirectUrl(req));
     }
 
     protected void deleteCartItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -78,7 +81,7 @@ public class cartServlet extends Basic_Servlet {
         if (null != cart) {
             cart.deleteItem(id);
         }
-        resp.sendRedirect(req.getHeader("Referer"));
+        resp.sendRedirect(WebUtils.getSafeRedirectUrl(req));
     }
 
 
@@ -87,6 +90,6 @@ public class cartServlet extends Basic_Servlet {
         if (null != cart) {
             cart.clear();
         }
-        resp.sendRedirect(req.getHeader("Referer"));
+        resp.sendRedirect(WebUtils.getSafeRedirectUrl(req));
     }
 }

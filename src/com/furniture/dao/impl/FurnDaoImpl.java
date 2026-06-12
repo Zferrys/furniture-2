@@ -70,4 +70,10 @@ public class FurnDaoImpl extends BasicDAO<Furn> implements FurnDao {
         String sql = "UPDATE furn SET store = ? WHERE id = ?";
         return update(sql, store, furnId);
     }
+
+    @Override
+    public int updateStockAtomic(int furnId, int salesIncrement, int storeDecrement) {
+        String sql = "UPDATE furn SET sales = sales + ?, store = store - ? WHERE id = ? AND store >= ?";
+        return update(sql, salesIncrement, storeDecrement, furnId, storeDecrement);
+    }
 }

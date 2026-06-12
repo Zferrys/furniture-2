@@ -50,7 +50,7 @@
                                 <a>请先登录</a>
                             </c:if>
                             <c:if test="${not empty sessionScope.member || not empty sessionScope.admin}">
-                                <a>欢迎: ${sessionScope.member.username}${sessionScope.admin.name}</a>
+                                <a>欢迎: <c:out value="${sessionScope.member.username}"/><c:out value="${sessionScope.admin.name}"/></a>
                             </c:if>
                         </div>
                         <div class="header-bottom-set dropdown">
@@ -132,7 +132,7 @@
                 <div class="alert alert-info" style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 5px; padding: 15px;">
                     <div class="row">
                         <div class="col-md-3">
-                            <strong>订单编号：</strong>${requestScope.order.id}
+                            <strong>订单编号：</strong><c:out value="${requestScope.order.id}"/>
                         </div>
                         <div class="col-md-3">
                             <strong>下单时间：</strong><fmt:formatDate value="${requestScope.order.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
@@ -147,7 +147,7 @@
                             </c:choose>
                         </div>
                         <div class="col-md-3">
-                            <strong>订单总价：</strong><span style="color: red; font-size: 18px;">¥${requestScope.totalPrice}</span>
+                            <strong>订单总价：</strong><span style="color: red; font-size: 18px;">¥<c:out value="${requestScope.totalPrice}"/></span>
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
                             <c:if test="${not empty requestScope.orderItems}">
                                 <c:forEach var="orderItem" items="${requestScope.orderItems}">
                                 <tr>
-                                    <td class="product-name"><a href="#">${orderItem.name}</a></td>
+                                    <td class="product-name"><a href="#"><c:out value="${orderItem.name}"/></a></td>
                                     <td class="product-price-cart"><span class="amount">¥${orderItem.price}</span></td>
                                     <td class="product-quantity">${orderItem.count} 件</td>
                                     <td class="product-subtotal"><span class="amount">¥${orderItem.totalPrice}</span></td>
@@ -183,10 +183,10 @@
                             <tfoot>
                             <tr>
                                 <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">
-                                    共 ${requestScope.totalCount} 件商品，总计：
+                                    共 <c:out value="${requestScope.totalCount}"/> 件商品，总计：
                                 </td>
                                 <td style="text-align: right; font-size: 18px; color: red; font-weight: bold;">
-                                    ¥${requestScope.totalPrice}
+                                    ¥<c:out value="${requestScope.totalPrice}"/>
                                 </td>
                             </tr>
                             </tfoot>
